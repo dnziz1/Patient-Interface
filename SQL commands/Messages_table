@@ -1,0 +1,9 @@
+-- Insert your SQL here
+
+CREATE TABLE Messages (
+  messageID int NOT NULL,
+  messageBody varchar(45) DEFAULT NULL,
+  pID int DEFAULT NULL,
+  PRIMARY KEY (messageID),
+  CONSTRAINT patientID FOREIGN KEY (pID) REFERENCES Patient (patientID)
+);
