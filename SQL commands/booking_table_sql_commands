@@ -1,0 +1,13 @@
+-- Insert your SQL here
+
+DROP TABLE IF EXISTS Bookings;
+
+CREATE TABLE Bookings (
+    BookingID INTEGER,
+    PatientID INTEGER,
+    Location VARCHAR(255),
+    Day INTEGER,
+    Month INTEGER,
+    Year INTEGER,
+    PRIMARY KEY (BookingID)
+);
