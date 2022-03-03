@@ -1,0 +1,53 @@
+CREATE TABLE `Doctors` (
+  `doctorID` INT NOT NULL,
+  `firstName` VARCHAR(45) NULL,
+  `lastName` VARCHAR(45) NULL,
+  `sex` CHAR(1) NULL,
+  `speciality` VARCHAR(45) NULL,
+  `dob` DATE NULL,
+  PRIMARY KEY (`doctorID`));
+
+INSERT INTO Doctors VALUES (
+  '001',
+    'Michael',
+    'Liu',
+    'M',
+    'Pediatrics',
+    '1994-04-17'
+);
+
+INSERT INTO Doctors VALUES (
+  '002',
+    'Antoni',
+    'Franks',
+    'M',
+    'Family Medicine',
+    '1989-06-02'
+);
+
+INSERT INTO Doctors VALUES (
+  '003',
+    'Lilly',
+    'Taylor',
+    'F',
+    'Psychiatry',
+    '1988-09-28'
+);
+
+INSERT INTO Doctors VALUES (
+  '004',
+    'Tyler',
+    'Greer',
+    'M',
+    'Gynecology',
+    '1990-01-20'
+);
+
+INSERT INTO Doctors VALUES (
+  '005',
+    'Maddie',
+    'Hunter',
+    'F',
+    'Surgery',
+    '1993-07-07'
+);
