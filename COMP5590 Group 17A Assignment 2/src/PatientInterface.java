@@ -243,6 +243,7 @@ public class PatientInterface
             	dbm.arrangeBooking(input);
             	frame4.setVisible(false);
             	viewBookings();
+            
             }
         });
         

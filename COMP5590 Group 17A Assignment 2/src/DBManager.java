@@ -130,7 +130,7 @@ import java.sql.PreparedStatement;
 			return resultData;
 		}
 		
-		//In Progress
+		//In Progress Code
 		public void arrangeBooking(String[] input) {
 			
 			String pid = input[0];
