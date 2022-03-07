@@ -22,11 +22,19 @@ public class PatientInterface
     private JLabel label2;
     private JTable table;
     private JButton button2;
+    private JButton button4;
     
     private JFrame frame3;
     private JLabel label3;
     private JTable table2;
     
+    private JFrame frame4;
+    private JLabel label4;
+    private JButton button3;
+    private JTextField locationField;
+    private JTextField dayField;
+    private JTextField monthField;
+    private JTextField yearField;
     
     public DBManager dbm = new DBManager();	
     public String loggedUser;
@@ -111,7 +119,20 @@ public class PatientInterface
         GridBagConstraints constraint2 = new GridBagConstraints();
         constraint2.gridx = 0;
         constraint2.gridy = 0;
+        
+        button4 = new JButton("Make New Bookings");
+        button4.setBounds(50,100,95,30);  
+        frame2.add(button4, constraint2);
 
+        button4.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+            	arrangeNewBooking();
+            }
+        });
+        
         //Button to open the View Bookings Window
         button2 = new JButton("View Bookings");
         button2.setBounds(50,100,95,30);  
@@ -167,6 +188,65 @@ public class PatientInterface
         frame3.add(sc, constraint3);
         
         frame3.setVisible(true);
+    }
+    
+    private void arrangeNewBooking() 
+    {
+    	frame4 = new JFrame("Book New Appointment");
+        frame4.setSize(400, 200);
+        frame4.setLayout(new GridBagLayout());
+        GridBagConstraints constraint4 = new GridBagConstraints();
+        constraint4.gridx = 0;
+        constraint4.gridy = 0;
+
+        label4 = new JLabel("Booking Appointment");
+        frame4.add(label, constraint4);
+        constraint4.gridx = 0;
+        constraint4.gridy = 1;
+        
+    	constraint4.gridx = 1;
+        locationField = new JTextField(12);
+        frame4.add(locationField, constraint4);
+        
+        constraint4.gridx = 2;
+        dayField = new JTextField(12);
+        frame4.add(dayField, constraint4);
+        
+        constraint4.gridx = 3;
+        monthField = new JTextField(12);
+        frame4.add(monthField, constraint4);
+        
+        constraint4.gridx = 4;
+        yearField = new JTextField(12);
+        frame4.add(yearField, constraint4);
+        
+        constraint4.gridx = 1;
+        constraint4.gridy = 2;
+        button3 = new JButton("Confirm Booking");
+        button3.setBounds(50,100,95,30);  
+        frame4.add(button3, constraint4);
+        
+        button3.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+                
+            	String[] input = new String[5];
+            	input[0] = loggedUser;
+            	
+            	input[1] = locationField.getText();
+            	input[2] = dayField.getText();
+            	input[3] = monthField.getText();
+            	input[4] = yearField.getText();
+            	
+            	dbm.arrangeBooking(input);
+            	frame4.setVisible(false);
+            	viewBookings();
+            }
+        });
+        
+        frame4.setVisible(true);
     }
     
     
