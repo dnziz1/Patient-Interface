@@ -6,7 +6,7 @@ CREATE TABLE Bookings (
     BookingID INTEGER,
     PatientID INTEGER,
     DoctorID INTEGER,
-    Location VARCHAR(255),
+    Room VARCHAR(255),
     Day INTEGER,
     Month INTEGER,
     Year INTEGER,
@@ -19,7 +19,7 @@ INSERT INTO Bookings VALUES (
     '001',
     '001',
     '002',
-    'London',
+    '1Su13',
     '12',
     '03',
     '2022'
@@ -29,7 +29,7 @@ INSERT INTO Bookings VALUES (
     '002',
     '002',
     '001',
-    'Liverpool',
+    '2Ge56',
     '01',
     '01',
     '2022'
@@ -39,7 +39,7 @@ INSERT INTO Bookings VALUES (
     '003',
     '003',
     '003',
-    'Manchester',
+    '2Su72',
     '20',
     '02',
     '2022'
@@ -49,7 +49,7 @@ INSERT INTO Bookings VALUES (
     '004',
     '004',
     '005',
-    'London',
+    '3Pe98',
     '06',
     '01',
     '2022'
@@ -59,7 +59,7 @@ INSERT INTO Bookings VALUES (
     '005',
     '005',
     '004',
-    'Bristol',
+    '4Gy77',
     '13',
     '02',
     '2022'
