@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import java.util.Random;
 	
 	public class DBManager {
 		private Connection connection;
@@ -109,12 +110,12 @@ import java.sql.PreparedStatement;
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select * from Bookings where patientID = " + "'" + pid + "'" + "");
 				while (resultSet.next()) {
-					String Location = resultSet.getString("Location");
+					String Room = resultSet.getString("Room");
 					String Day = resultSet.getString("Day");
 					String Month = resultSet.getString("Month");
 					String Year = resultSet.getString("Year");
 					int j = 0;
-					resultData[i][j] = Location;
+					resultData[i][j] = Room;
 					j++;
 					resultData[i][j] = Day;
 					j++;
@@ -130,31 +131,33 @@ import java.sql.PreparedStatement;
 			return resultData;
 		}
 		
-		//In Progress Code
-		public void arrangeBooking(String[] input) {
+		// Takes input from a String array, as well as the current PatientID, and uses them to prepare an SQL statement to insert a new booking entry into the Bookings table before executing it
+		public void arrangeBooking(String[] input, String pid) {
 			
-			String pid = input[0];
-			String location = input[1];
-			String day = input[2];
-			String month = input[3];
-			String year = input[4];
+			String room = input[0];
+			int day = Integer.parseInt(input[1]);
+			int month = Integer.parseInt(input[2]);
+			int year = Integer.parseInt(input[3]);
+			
+			int bookingID = generateRandomIDNumber();
+			int doctorID = Integer.parseInt(getDoctorID(pid));
 			
 			try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 			statement = connection.createStatement();
-			String inputSet = ("Insert into Bookings Values ( " + "'" + 2 + "', " + "'" + pid + "', " + location + "', " + "'" + day + "', " + "'" + month + "', " + "'" + year + "' );");
 			
-			String query = " insert into Bookings (BookingID, PatientID, Location, Day, Month, Year)"
-			        + " values (?, ?, ?, ?, ?, ?)";
+			String query = " insert into Bookings (BookingID, PatientID, DoctorID, Room, Day, Month, Year)"
+			        + " values (?, ?, ?, ?, ?, ?, ?)";
 
 			      PreparedStatement preparedStmt = connection.prepareStatement(query);
-			      //preparedStmt.setInt (1, "2");
-			      //preparedStmt.setString (2, pid);
-			      //preparedStmt.setString   (3, location);
-			      //preparedStmt.setBoolean(4, day);
-			      //preparedStmt.setInt    (5, month.toInt());
-			      //preparedStmt.setInt    (6, year);
+			      preparedStmt.setInt    (1, bookingID);
+			      preparedStmt.setString (2, pid);
+			      preparedStmt.setInt    (3, doctorID);
+			      preparedStmt.setString (4, room);
+			      preparedStmt.setInt    (5, day);
+			      preparedStmt.setInt    (6, month);
+			      preparedStmt.setInt    (7, year);
 
 			      preparedStmt.execute();
 			      
@@ -162,5 +165,110 @@ import java.sql.PreparedStatement;
 				e.printStackTrace();
 			}
 		}
+		
+		// Generates a random ID number and checks it against a given database table, if the number is unique then it is returned, else the method loops 
+		public int generateRandomIDNumber() {
+			
+			int id = 0;
+			
+			Random rm = new Random();
+			id = 1 + rm.nextInt((100 - 1) + 1);
+			
+			// Method needs rewriting to account for checking different tables. Having a check prior would be sufficient
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+				statement = connection.createStatement();
+				resultSet = statement.executeQuery("select * from Bookings where BookingID = " + "'" + id + "'" + "");
+				if (resultSet.next()) {
+					generateRandomIDNumber(); 
+				} else {
+					return id;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
+			}
+			return -1;
+		}
+		
+		// Prepares and launches an SQL query searching the database for the doctorID number using the patientID as parameter, and then returning it.
+		public String getDoctorID(String pid) {
+			
+			String result;
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+				statement = connection.createStatement();
+				resultSet = statement.executeQuery("select doctorID from patient where patientID = " + "'" + pid + "'" + "");
+				if (resultSet.next()) {
+					result = resultSet.getString("doctorID");
+					return result;
+				} else {
+					return null;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+			
+		}
+		
+		//Generates a message and adds it to the Messages Table in the database based on the parameter msgCode
+		public void addMessage(int msgCode, String pid) {
+			
+			String msgBody = null;
+			
+			//1 = New Patient, 2 = Change Doctor, 3 = Arrange Booking, 4 = Reschedule Booking 
+			switch (msgCode) {
+			case 1:
+				
+				msgBody = "NEW PATIENT";
+				
+				break;
+			
+			case 2:
+				
+				msgBody = "CHANGE DOCTOR";
+				
+				break;
+				
+			case 3:
+				
+				msgBody = "You have made a new appointment at the clinic";
+				
+				break;
+				
+			case 4:
+				
+				msgBody = "RESCHEDULE BOOKING";
+				
+				break;
+			
+			}
+			
+			int messageID = generateRandomIDNumber();	
+				
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+				statement = connection.createStatement();
+				
+				String query = " insert into Messages (messageID, messageBody, pID)"
+				        + " values (?, ?, ?)";
+
+				      PreparedStatement preparedStmt = connection.prepareStatement(query);
+				      preparedStmt.setInt    (1, messageID);
+				      preparedStmt.setString (2, msgBody);
+				      preparedStmt.setString (3, pid);
+
+				      preparedStmt.execute();
+				      
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			
+		}
+		
 	}
 
