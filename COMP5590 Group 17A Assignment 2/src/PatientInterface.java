@@ -35,6 +35,10 @@ public class PatientInterface
     private JTextField dayField;
     private JTextField monthField;
     private JTextField yearField;
+    private JLabel label5;
+    private JLabel label6;
+    private JLabel label7;
+    private JLabel label8;
     
     public DBManager dbm = new DBManager();	
     public String loggedUser;
@@ -134,6 +138,7 @@ public class PatientInterface
         });
         
         //Button to open the View Bookings Window
+        constraint2.gridx = 1;
         button2 = new JButton("View Bookings");
         button2.setBounds(50,100,95,30);  
         frame2.add(button2, constraint2);
@@ -181,7 +186,7 @@ public class PatientInterface
         constraint3.gridx = 0;
         constraint3.gridy = 2;
 
-        String columns[] = {"Location", "Day","Month", "Year"};
+        String columns[] = {"Room", "Day","Month", "Year"};
         table = new JTable(dbm.getBookings(loggedUser), columns);
         table.setBounds(30,40,200,300);  
         JScrollPane sc = new JScrollPane(table);
@@ -190,6 +195,7 @@ public class PatientInterface
         frame3.setVisible(true);
     }
     
+    //Brings up the arrangeNewBooking JFrame and Displays a form to input new booking information
     private void arrangeNewBooking() 
     {
     	frame4 = new JFrame("Book New Appointment");
@@ -200,28 +206,48 @@ public class PatientInterface
         constraint4.gridy = 0;
 
         label4 = new JLabel("Booking Appointment");
-        frame4.add(label, constraint4);
-        constraint4.gridx = 0;
-        constraint4.gridy = 1;
+        frame4.add(label4, constraint4);
+        constraint4.gridx = 1;
         
-    	constraint4.gridx = 1;
+        constraint4.gridy = 1;
         locationField = new JTextField(12);
+        locationField.setSize(100,20);
         frame4.add(locationField, constraint4);
         
-        constraint4.gridx = 2;
+        constraint4.gridy = 2;
         dayField = new JTextField(12);
+        dayField.setSize(100,20);
         frame4.add(dayField, constraint4);
         
-        constraint4.gridx = 3;
+        constraint4.gridy = 3;
         monthField = new JTextField(12);
+        monthField.setSize(100,20);
         frame4.add(monthField, constraint4);
         
-        constraint4.gridx = 4;
+        constraint4.gridy = 4;
         yearField = new JTextField(12);
+        yearField.setSize(100,20);
         frame4.add(yearField, constraint4);
         
-        constraint4.gridx = 1;
+        constraint4.gridx = 0;
+        constraint4.gridy = 1;
+        label5 = new JLabel("Room");
+        frame4.add(label5, constraint4);
+        
         constraint4.gridy = 2;
+        label6 = new JLabel("Day");
+        frame4.add(label6, constraint4);
+        
+        constraint4.gridy = 3;
+        label7 = new JLabel("Month");
+        frame4.add(label7, constraint4);
+        
+        constraint4.gridy = 4;
+        label8 = new JLabel("Year");
+        frame4.add(label8, constraint4);
+        
+        constraint4.gridx = 1;
+        constraint4.gridy = 5;
         button3 = new JButton("Confirm Booking");
         button3.setBounds(50,100,95,30);  
         frame4.add(button3, constraint4);
@@ -232,15 +258,14 @@ public class PatientInterface
             public void actionPerformed(ActionEvent event)
             {
                 
-            	String[] input = new String[5];
-            	input[0] = loggedUser;
+            	String[] input = new String[4];
+
+            	input[0] = locationField.getText();
+            	input[1] = dayField.getText();
+            	input[2] = monthField.getText();
+            	input[3] = yearField.getText();
             	
-            	input[1] = locationField.getText();
-            	input[2] = dayField.getText();
-            	input[3] = monthField.getText();
-            	input[4] = yearField.getText();
-            	
-            	dbm.arrangeBooking(input);
+            	dbm.arrangeBooking(input, loggedUser);
             	frame4.setVisible(false);
             	viewBookings();
             
@@ -252,9 +277,3 @@ public class PatientInterface
     
     
 }
-
-
-
-
-
-
