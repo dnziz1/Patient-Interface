@@ -12,11 +12,13 @@ CREATE TABLE Patient (
     sex char(1),
     phoneNo varchar(255),
     address varchar(255),
-	primary key (patientID)
+    doctorID integer,
+	primary key (patientID),
+    foreign key (doctorID) references Doctors(doctorID)
 );
 
 
--- commands w/ duplicates
+-- examples (10)
 
 INSERT INTO Patient VALUES (
     'joesmith@nhs.co.uk',
@@ -27,7 +29,8 @@ INSERT INTO Patient VALUES (
     'Smith',
     'M',
     '07456876123',
-    '58 Pearl Avenue SW1A 0AA'
+    '58 Pearl Avenue SW1A 0AA',
+    '002'
 );
 
 INSERT INTO Patient VALUES (
@@ -39,7 +42,8 @@ INSERT INTO Patient VALUES (
     'Smeets',
     'M',
     '+44231567001',
-    '3 Seed Street NW1 5LR'
+    '3 Seed Street NW1 5LR',
+    '003'
 );
 
 INSERT INTO Patient VALUES (
@@ -51,7 +55,8 @@ INSERT INTO Patient VALUES (
     'Fry',
     'F',
     '07816000789',
-    '77 Rose Grove SW7 2RL'
+    '77 Rose Grove SW7 2RL',
+    '001'
 );
 
 INSERT INTO Patient VALUES (
@@ -63,7 +68,8 @@ INSERT INTO Patient VALUES (
     'Sparks',
     'F',
     '07113221846',
-    '12 Tab Road SE1 7PB'
+    '12 Tab Road SE1 7PB',
+    '005'
 );
 
 INSERT INTO Patient VALUES (
@@ -75,10 +81,10 @@ INSERT INTO Patient VALUES (
     'Agua',
     'M',
     '+44306773230',
-    '42 Boots Avenue SW1E 6SQ'
+    '42 Boots Avenue SW1E 6SQ',
+    '004'
 );
 
--- commands w/o duplicates
 
 INSERT INTO Patient VALUES (
     'joesmith@nhs.co.uk',
@@ -89,7 +95,8 @@ INSERT INTO Patient VALUES (
     'Smith',
     'M',
     '07456876123',
-    '58 Pearl Avenue SW1A 0AA'
+    '58 Pearl Avenue SW1A 0AA',
+    '002'
 );
 
 INSERT INTO Patient VALUES (
@@ -101,7 +108,8 @@ INSERT INTO Patient VALUES (
     'Smeets',
     'M',
     '+44231567001',
-    '3 Seed Street NW1 5LR'
+    '3 Seed Street NW1 5LR',
+    '001'
 );
 
 INSERT INTO Patient VALUES (
@@ -113,7 +121,8 @@ INSERT INTO Patient VALUES (
     'Fry',
     'F',
     '07816000789',
-    '77 Rose Grove SW7 2RL'
+    '77 Rose Grove SW7 2RL',
+    '004'
 );
 
 INSERT INTO Patient VALUES (
@@ -125,7 +134,8 @@ INSERT INTO Patient VALUES (
     'Sparks',
     'F',
     '07113221846',
-    '12 Tab Road SE1 7PB'
+    '12 Tab Road SE1 7PB',
+    '003'
 );
 
 INSERT INTO Patient VALUES (
@@ -137,7 +147,8 @@ INSERT INTO Patient VALUES (
     'Agua',
     'M',
     '+44306773230',
-    '42 Boots Avenue SW1E 6SQ'
+    '42 Boots Avenue SW1E 6SQ',
+    '004'
 );
 
 
