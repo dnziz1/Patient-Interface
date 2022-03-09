@@ -5,9 +5,63 @@ DROP TABLE IF EXISTS Bookings;
 CREATE TABLE Bookings (
     BookingID INTEGER,
     PatientID INTEGER,
+    DoctorID INTEGER,
     Location VARCHAR(255),
     Day INTEGER,
     Month INTEGER,
     Year INTEGER,
-    PRIMARY KEY (BookingID)
+    PRIMARY KEY (BookingID),
+    FOREIGN KEY (PatientID) REFERENCES Patient(patientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors(doctorID)
 );
+
+INSERT INTO Bookings VALUES (
+    '001',
+    '001',
+    '002',
+    'London',
+    '12',
+    '03',
+    '2022'
+);
+
+INSERT INTO Bookings VALUES (
+    '002',
+    '002',
+    '001',
+    'Liverpool',
+    '01',
+    '01',
+    '2022'
+);
+
+INSERT INTO Bookings VALUES (
+    '003',
+    '003',
+    '003',
+    'Manchester',
+    '20',
+    '02',
+    '2022'
+);
+
+INSERT INTO Bookings VALUES (
+    '004',
+    '004',
+    '005',
+    'London',
+    '06',
+    '01',
+    '2022'
+);
+
+INSERT INTO Bookings VALUES (
+    '005',
+    '005',
+    '004',
+    'Bristol',
+    '13',
+    '02',
+    '2022'
+);
+
