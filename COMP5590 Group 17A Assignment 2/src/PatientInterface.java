@@ -28,17 +28,17 @@ public class PatientInterface
     private JLabel label3;
     private JTable table2;
     
-    private JFrame frame4;
-    private JLabel label4;
-    private JButton button3;
-    private JTextField locationField;
-    private JTextField dayField;
-    private JTextField monthField;
-    private JTextField yearField;
-    private JLabel label5;
-    private JLabel label6;
-    private JLabel label7;
-    private JLabel label8;
+    private JFrame frameAr;
+    private JLabel labelAr;
+    private JButton buttonAr;
+    private JTextField locationFieldAr;
+    private JTextField dayFieldAr;
+    private JTextField monthFieldAr;
+    private JTextField yearFieldAr;
+    private JLabel labelAr1;
+    private JLabel labelAr2;
+    private JLabel labelAr3;
+    private JLabel labelAr4;
     
     public DBManager dbm = new DBManager();	
     public String loggedUser;
@@ -186,7 +186,7 @@ public class PatientInterface
         constraint3.gridx = 0;
         constraint3.gridy = 2;
 
-        String columns[] = {"Room", "Day","Month", "Year"};
+        String columns[] = {"Id","Room", "Day","Month", "Year"};
         table = new JTable(dbm.getBookings(loggedUser), columns);
         table.setBounds(30,40,200,300);  
         JScrollPane sc = new JScrollPane(table);
@@ -198,61 +198,61 @@ public class PatientInterface
     //Brings up the arrangeNewBooking JFrame and Displays a form to input new booking information
     private void arrangeNewBooking() 
     {
-    	frame4 = new JFrame("Book New Appointment");
-        frame4.setSize(400, 200);
-        frame4.setLayout(new GridBagLayout());
+    	frameAr = new JFrame("Book New Appointment");
+        frameAr.setSize(400, 200);
+        frameAr.setLayout(new GridBagLayout());
         GridBagConstraints constraint4 = new GridBagConstraints();
         constraint4.gridx = 0;
         constraint4.gridy = 0;
 
-        label4 = new JLabel("Booking Appointment");
-        frame4.add(label4, constraint4);
+        labelAr = new JLabel("Booking Appointment");
+        frameAr.add(labelAr, constraint4);
         constraint4.gridx = 1;
         
         constraint4.gridy = 1;
-        locationField = new JTextField(12);
-        locationField.setSize(100,20);
-        frame4.add(locationField, constraint4);
+        locationFieldAr = new JTextField(12);
+        locationFieldAr.setSize(100,20);
+        frameAr.add(locationFieldAr, constraint4);
         
         constraint4.gridy = 2;
-        dayField = new JTextField(12);
-        dayField.setSize(100,20);
-        frame4.add(dayField, constraint4);
+        dayFieldAr = new JTextField(12);
+        dayFieldAr.setSize(100,20);
+        frameAr.add(dayFieldAr, constraint4);
         
         constraint4.gridy = 3;
-        monthField = new JTextField(12);
-        monthField.setSize(100,20);
-        frame4.add(monthField, constraint4);
+        monthFieldAr = new JTextField(12);
+        monthFieldAr.setSize(100,20);
+        frameAr.add(monthFieldAr, constraint4);
         
         constraint4.gridy = 4;
-        yearField = new JTextField(12);
-        yearField.setSize(100,20);
-        frame4.add(yearField, constraint4);
+        yearFieldAr = new JTextField(12);
+        yearFieldAr.setSize(100,20);
+        frameAr.add(yearFieldAr, constraint4);
         
         constraint4.gridx = 0;
         constraint4.gridy = 1;
-        label5 = new JLabel("Room");
-        frame4.add(label5, constraint4);
+        labelAr1 = new JLabel("Room");
+        frameAr.add(labelAr1, constraint4);
         
         constraint4.gridy = 2;
-        label6 = new JLabel("Day");
-        frame4.add(label6, constraint4);
+        labelAr2 = new JLabel("Day");
+        frameAr.add(labelAr2, constraint4);
         
         constraint4.gridy = 3;
-        label7 = new JLabel("Month");
-        frame4.add(label7, constraint4);
+        labelAr3 = new JLabel("Month");
+        frameAr.add(labelAr3, constraint4);
         
         constraint4.gridy = 4;
-        label8 = new JLabel("Year");
-        frame4.add(label8, constraint4);
+        labelAr4 = new JLabel("Year");
+        frameAr.add(labelAr4, constraint4);
         
         constraint4.gridx = 1;
         constraint4.gridy = 5;
-        button3 = new JButton("Confirm Booking");
-        button3.setBounds(50,100,95,30);  
-        frame4.add(button3, constraint4);
+        buttonAr = new JButton("Confirm Booking");
+        buttonAr.setBounds(50,100,95,30);  
+        frameAr.add(buttonAr, constraint4);
         
-        button3.addActionListener(new ActionListener()
+        buttonAr.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent event)
@@ -260,19 +260,19 @@ public class PatientInterface
                 
             	String[] input = new String[4];
 
-            	input[0] = locationField.getText();
-            	input[1] = dayField.getText();
-            	input[2] = monthField.getText();
-            	input[3] = yearField.getText();
+            	input[0] = locationFieldAr.getText();
+            	input[1] = dayFieldAr.getText();
+            	input[2] = monthFieldAr.getText();
+            	input[3] = yearFieldAr.getText();
             	
             	dbm.arrangeBooking(input, loggedUser);
-            	frame4.setVisible(false);
+            	frameAr.setVisible(false);
             	viewBookings();
             
             }
         });
         
-        frame4.setVisible(true);
+        frameAr.setVisible(true);
     }
     
     

@@ -110,11 +110,14 @@ import java.util.Random;
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select * from Bookings where patientID = " + "'" + pid + "'" + "");
 				while (resultSet.next()) {
+					String BookingID = resultSet.getString("BookingID");
 					String Room = resultSet.getString("Room");
 					String Day = resultSet.getString("Day");
 					String Month = resultSet.getString("Month");
 					String Year = resultSet.getString("Year");
 					int j = 0;
+					resultData[i][j] = BookingID;
+					j++;
 					resultData[i][j] = Room;
 					j++;
 					resultData[i][j] = Day;
