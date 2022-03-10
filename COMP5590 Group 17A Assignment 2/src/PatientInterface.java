@@ -28,6 +28,7 @@ public class PatientInterface
     private JTable table2;
     
     //variables for reschedule bookings JFrame
+    private JButton buttonAB;
     private JFrame frameRB;
     private JLabel labelRB;
     private JTable tableRB;
@@ -142,7 +143,22 @@ public class PatientInterface
             }
         });
         
-        constraint2.gridx = 0;
+        //constraint2.gridx = 2;
+        //constraint2.gridy = 0;
+        buttonAB = new JButton("Ammend Bookings");
+        buttonAB.setBounds(50,100,95,30);  
+        frame2.add(buttonAB, constraint2);
+        
+        buttonAB.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+            	rescheduleBookings();
+            }
+        });
+        
+        constraint2.gridx = 1;
         constraint2.gridy = 2;
 
         frame2.setSize(600, 600);
@@ -176,7 +192,7 @@ public class PatientInterface
         constraint3.gridx = 0;
         constraint3.gridy = 2;
 
-        String columns[] = {"Location", "Day","Month", "Year"};
+        String columns[] = {"BookingID", "Room", "Day","Month", "Year"};
         table = new JTable(dbm.getBookings(loggedUser), columns);
         table.setBounds(30,40,200,300);  
         JScrollPane sc = new JScrollPane(table);
@@ -193,7 +209,7 @@ public class PatientInterface
         constraintRB.gridy = 0;
 
         frameRB.setSize(600, 600);
-        labelRB = new JLabel("Previous booking: ");
+        labelRB = new JLabel("Previous bookings: ");
         frameRB.add(labelRB, constraintRB);
         constraintRB.gridx = 0;
         constraintRB.gridy = 2;
@@ -202,63 +218,88 @@ public class PatientInterface
         String columns[] = {"BookingID", "Room", "Day", "Month", "Year"};
         tableRB = new JTable(dbm.getBookings(loggedUser), columns);
         table.setBounds(30,40,200,300);  
-        JScrollPane sc = new JScrollPane(table);
-        frameRB.add(sc, constraintRB);
+        JScrollPane scRB = new JScrollPane(tableRB);
+        frameRB.add(scRB, constraintRB);
         
         frameRB.setVisible(true);
         
         //label, input field and button
         labelRB = new JLabel("Insert BookingID: ");
+        constraintRB.gridx = 0;
+        constraintRB.gridy = 3;
+        frameRB.add(labelRB, constraintRB);
+        
         textRB = new JTextField();
+        textRB.setSize(100,20);
+        constraintRB.gridx = 0;
+        constraintRB.gridy = 4;
+        frameRB.add(textRB, constraintRB);
+        
         buttonRB = new JButton("Submit");
-        buttonRB.setBounds(50,100,95,30);  
+        buttonRB.setBounds(50,100,95,30);
+        constraintRB.gridx = 0;
+        constraintRB.gridy = 5;
         frameRB.add(buttonRB, constraintRB);
 
         buttonRB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event)
             {
-            	amendBooking();
+            	String input = textRB.getText();
+            	
+            	if (dbm.isValidBookingID(loggedUser,input)) {
+            		amendBooking(input);
+            	} else {
+            		JOptionPane.showMessageDialog(frameRB, "Not a Valid Booking ID for This User");
+                    textRB.setText("");
+            	}
+            	
             }
         });
     	
     	
     }
     
-    private void amendBooking() {
+    private void amendBooking(String bookingID) {
     	frameRB1 = new JFrame("Patient Interface: Amend Booking");
     	frameRB1.setLayout(new GridBagLayout());
     	GridBagConstraints constraintRB1 = new GridBagConstraints();
         constraintRB1.gridx = 0;
-        constraintRB1.gridy = 0;
+        constraintRB1.gridy = 1;
 
         frameRB1.setSize(600, 600);
         labelRB1 = new JLabel("Day: ");
         frameRB1.add(labelRB1, constraintRB1);
-        constraintRB1.gridx = 0;
-        constraintRB1.gridy = 2;
+        constraintRB1.gridx = 1;
+        constraintRB1.gridy = 1;
         
         textRB1 = new JTextField();
-        frameRB1.add(labelRB1, constraintRB1);
+        frameRB1.add(textRB1, constraintRB1);
         
+        constraintRB1.gridx = 0;
+        constraintRB1.gridy = 2;
         frameRB1.setSize(600, 600);
         labelRB2 = new JLabel("Month: ");
-        frameRB1.add(labelRB1, constraintRB1);
-        constraintRB1.gridx = 0;
+        frameRB1.add(labelRB2, constraintRB1);
+        constraintRB1.gridx = 1;
         constraintRB1.gridy = 2;
         
         textRB2 = new JTextField();
-        frameRB1.add(labelRB1, constraintRB1);
+        frameRB1.add(textRB2, constraintRB1);
         
+        constraintRB1.gridx = 0;
+        constraintRB1.gridy = 3;
         frameRB1.setSize(600, 600);
         labelRB3 = new JLabel("Year: ");
-        frameRB1.add(labelRB1, constraintRB1);
-        constraintRB1.gridx = 0;
-        constraintRB1.gridy = 2;
+        frameRB1.add(labelRB3, constraintRB1);
+        constraintRB1.gridx = 1;
+        constraintRB1.gridy = 3;
         
         textRB3 = new JTextField();
-        frameRB1.add(labelRB1, constraintRB1);
+        frameRB1.add(textRB3, constraintRB1);
         
+        constraintRB1.gridx = 1;
+        constraintRB1.gridy = 4;
         buttonRB1 = new JButton("Submit");
         buttonRB1.setBounds(50,100,95,30);  
         frameRB1.add(buttonRB1, constraintRB1);
@@ -267,14 +308,20 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
-            	String[]input = new String[4];
+            	String[]input = new String[3];
+            	
             	input[0] = textRB1.getText();
             	input[1] = textRB2.getText();
             	input[2] = textRB3.getText();
             		
-            	dbm.submittedBooking(input);
+            	dbm.submittedBooking(input, bookingID);
+            	
+            	viewBookings();
+            	
             }
         });
+        
+        frameRB1.setVisible(true);
         
     }
 

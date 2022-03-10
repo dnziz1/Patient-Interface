@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 	
@@ -108,12 +109,15 @@ import java.sql.Statement;
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select * from Bookings where patientID = " + "'" + pid + "'" + "");
 				while (resultSet.next()) {
-					String Location = resultSet.getString("Location");
+					String BookingID = resultSet.getString("BookingID");
+					String Room = resultSet.getString("Room");
 					String Day = resultSet.getString("Day");
 					String Month = resultSet.getString("Month");
 					String Year = resultSet.getString("Year");
 					int j = 0;
-					resultData[i][j] = Location;
+					resultData[i][j] = BookingID;
+					j++;
+					resultData[i][j] = Room;
 					j++;
 					resultData[i][j] = Day;
 					j++;
@@ -129,11 +133,55 @@ import java.sql.Statement;
 			return resultData;
 		}
 		
-		public void submittedBooking(String[]input) {
+		public void submittedBooking(String[]input, String bID) {
+				
+				int bookingID = Integer.parseInt(bID);
+			
+				int day = Integer.parseInt(input[0]);
+				int month = Integer.parseInt(input[1]);
+				int year = Integer.parseInt(input[2]);
+				
+				try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+				statement = connection.createStatement();
+				
+				String query = " Update Bookings Set day = ?, month = ?, year = ? where bookingID = ?";
+
+				      PreparedStatement preparedStmt = connection.prepareStatement(query);
+				      preparedStmt.setInt    (1, day);
+				      preparedStmt.setInt    (2, month);
+				      preparedStmt.setInt    (3, year);
+				      preparedStmt.setInt    (4, bookingID);
+
+				      preparedStmt.execute();
+				      
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
+		
+		public Boolean isValidBookingID (String pID, String bID) {
+			
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+				statement = connection.createStatement();
+				resultSet = statement.executeQuery("select BookingID from Bookings where PatientID = " + "'" + pID + "'" + " AND BookingID = " + "'" + bID + "'" + "");
+				if (resultSet.next()) {
+					return true;
+				} else {
+					return false;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			
 			
 		}
 		
 		
 		
 	}
+}
 
