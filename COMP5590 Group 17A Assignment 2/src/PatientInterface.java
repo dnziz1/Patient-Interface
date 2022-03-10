@@ -56,7 +56,7 @@ public class PatientInterface
         pi.setupInterface();
         
     }
-    //Method to create the starting jframe
+    //Method to create the starting login jframe
     private void setupInterface()
     {
         frameMain = new JFrame("Patient Interface");
@@ -92,6 +92,7 @@ public class PatientInterface
         //Button to submit the login details
         buttonMain = new JButton("Enter");
         frameMain.add(buttonMain, constraint);
+        //Action listener to check for the users click
         buttonMain.addActionListener(new ActionListener()
         {
             @Override
@@ -146,7 +147,7 @@ public class PatientInterface
         buttonViewM1 = new JButton("View Bookings");
         buttonViewM1.setBounds(50,100,95,30);  
         frameViewM.add(buttonViewM1, constraint2);
-
+        //Action listener to populate the table once the user presses view bookings
         buttonViewM1.addActionListener(new ActionListener()
         {
             @Override
@@ -175,7 +176,8 @@ public class PatientInterface
         frameViewM.setVisible(true);
     } 
     
-    //Brings up the viewBookings JframeMain and populates it with all current bookings for the logged in patient
+    //Method to create the viewbookings jframe
+    //Populates the frame with all current bookings for the logged in patient
     private void viewBookings() 
     {
     	frameShowB = new JFrame("Patient Interface: View Bookings");
@@ -199,7 +201,8 @@ public class PatientInterface
         frameShowB.setVisible(true);
     }
     
-    //Brings up the arrangeNewBooking JframeMain and Displays a form to input new booking information
+    //Method to create the arrangenewbookings jframe
+    //Displays a form to input new booking information
     private void arrangeNewBooking() 
     {
     	frameArrangeB = new JFrame("Book New Appointment");
@@ -209,10 +212,12 @@ public class PatientInterface
         constraint4.gridx = 0;
         constraint4.gridy = 0;
 
+        //Title
         labelArrangeB = new JLabel("Booking Appointment");
         frameArrangeB.add(labelArrangeB, constraint4);
         constraint4.gridx = 1;
         
+        //Text fields
         constraint4.gridy = 1;
         locationField = new JTextField(12);
         locationField.setSize(100,20);
@@ -250,12 +255,13 @@ public class PatientInterface
         labelArrangeB4 = new JLabel("Year");
         frameArrangeB.add(labelArrangeB4, constraint4);
         
+        //Button for user to confirm their data
         constraint4.gridx = 1;
         constraint4.gridy = 5;
         buttonArrangeB = new JButton("Confirm Booking");
         buttonArrangeB.setBounds(50,100,95,30);  
         frameArrangeB.add(buttonArrangeB, constraint4);
-        
+        //Action listener to input the data entered by the user into the database
         buttonArrangeB.addActionListener(new ActionListener()
         {
             @Override
