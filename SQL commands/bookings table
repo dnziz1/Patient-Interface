@@ -1,0 +1,67 @@
+-- Insert your SQL here
+
+DROP TABLE IF EXISTS Bookings;
+
+CREATE TABLE Bookings (
+    BookingID INTEGER,
+    PatientID INTEGER,
+    DoctorID INTEGER,
+    Room VARCHAR(255),
+    Day INTEGER,
+    Month INTEGER,
+    Year INTEGER,
+    PRIMARY KEY (BookingID),
+    FOREIGN KEY (PatientID) REFERENCES Patient(patientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors(doctorID)
+);
+
+INSERT INTO Bookings VALUES (
+    '001',
+    '001',
+    '002',
+    '1Su13',
+    '12',
+    '03',
+    '2022'
+);
+
+INSERT INTO Bookings VALUES (
+    '002',
+    '002',
+    '001',
+    '2Ge56',
+    '01',
+    '01',
+    '2022'
+);
+
+INSERT INTO Bookings VALUES (
+    '003',
+    '003',
+    '003',
+    '2Su72',
+    '20',
+    '02',
+    '2022'
+);
+
+INSERT INTO Bookings VALUES (
+    '004',
+    '004',
+    '005',
+    '3Pe98',
+    '06',
+    '01',
+    '2022'
+);
+
+INSERT INTO Bookings VALUES (
+    '005',
+    '005',
+    '004',
+    '4Gy77',
+    '13',
+    '02',
+    '2022'
+);
+
