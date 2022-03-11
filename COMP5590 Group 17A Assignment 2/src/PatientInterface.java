@@ -30,6 +30,7 @@ public class PatientInterface
     private JFrame frame4;
     private JLabel label4;
     private JTable table3;
+    private JTextField text3;
     private JButton button3;
     
     public DBManager dbm = new DBManager();	
@@ -186,7 +187,7 @@ public class PatientInterface
     	constraint4.gridx = 0;
     	constraint4.gridy = 3;
     	
-    	String columns[] = {"doctorID", "Last Name", "Speciality", "Change"};
+    	String columns[] = {"doctorID", "Last Name", "Speciality"};
     	table = new JTable(dbm.getDoctors(loggedUser), columns);
     	table.setBounds(30,40,200,300);
     	JScrollPane sc = new JScrollPane(table);
@@ -196,11 +197,20 @@ public class PatientInterface
         button3.setBounds(50,100,95,30);  
         frame4.add(button2, constraint4);
         
+        text3 = new JTextField(5);
+        text3.setSize(100,20);
+        constraint4.gridx = 0;
+        constraint4.gridy = 4;
+        frame4.add(text3, constraint4);
+
+        
         button3.addActionListener(new ActionListener()
         {
         	@Override
         	public void actionPerformed(ActionEvent event) 
         	{
+        		String doctorid = text3.getText();
+        		dbm.changeCurrentDoctor(doctorid);
         		JOptionPane.showMessageDialog(frame4, "Changed to (Last Name), confirmation message will be received shortly.");
         	}
         });
