@@ -273,5 +273,58 @@ import java.util.Random;
 			
 		}
 		
+		
+		public void submittedBooking(String[]input, String bID) {
+			
+			int bookingID = Integer.parseInt(bID);
+		
+			int day = Integer.parseInt(input[0]);
+			int month = Integer.parseInt(input[1]);
+			int year = Integer.parseInt(input[2]);
+			
+			try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+			statement = connection.createStatement();
+			
+			String query = " Update Bookings Set day = ?, month = ?, year = ? where bookingID = ?";
+
+			      PreparedStatement preparedStmt = connection.prepareStatement(query);
+			      preparedStmt.setInt    (1, day);
+			      preparedStmt.setInt    (2, month);
+			      preparedStmt.setInt    (3, year);
+			      preparedStmt.setInt    (4, bookingID);
+
+			      preparedStmt.execute();
+			      
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	}
+	
+	public Boolean isValidBookingID (String pID, String bID) {
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select BookingID from Bookings where PatientID = " + "'" + pID + "'" + " AND BookingID = " + "'" + bID + "'" + "");
+			if (resultSet.next()) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		
+		
+	}
+	
+	
+	
+}
+		
+		
 	}
 
