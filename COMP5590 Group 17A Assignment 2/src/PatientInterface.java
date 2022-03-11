@@ -61,6 +61,15 @@ public class PatientInterface
     private JTextField textRB3;
     private JButton buttonRB1;
     
+    //variables for Change Doctor JFrame
+    
+    private JButton buttonCD;
+    private JFrame frame4;
+    private JLabel label4;
+    private JTable table3;
+    private JTextField text3;
+    private JButton button3;
+    
     //Link to DBManager
     public DBManager dbm = new DBManager();	
     public String loggedUser;
@@ -175,6 +184,8 @@ public class PatientInterface
             }
         });
         
+        constraint2.gridy = 1;
+        constraint2.gridx = 0;
         buttonAB = new JButton("Ammend Bookings");
         buttonAB.setBounds(50,100,95,30);  
         frameViewM.add(buttonAB, constraint2);
@@ -185,6 +196,21 @@ public class PatientInterface
             public void actionPerformed(ActionEvent event)
             {
             	rescheduleBookings();
+            }
+        });
+        
+        constraint2.gridy = 1;
+        constraint2.gridx = 1;
+        buttonCD = new JButton("Change Doctor");
+        buttonCD.setBounds(50,100,95,30);  
+        frameViewM.add(buttonCD, constraint2);
+        
+        buttonCD.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+            	changeDoctor();
             }
         });
         
@@ -442,7 +468,55 @@ public class PatientInterface
           frameRB1.setVisible(true);
           
       }
-    
-    
-    
+      
+      private void changeDoctor()
+      {
+      	frame4 = new JFrame("Patient Interface: Change Doctor");
+      	frame4.setLayout(new GridBagLayout());
+      	GridBagConstraints constraint4 = new GridBagConstraints();
+      	constraint4.gridx = 0;
+      	constraint4.gridy = 0;
+      	
+      	frame4.setSize(600, 600);
+      	label4 = new JLabel("Available Doctors List");
+      	frame4.add(label4, constraint4);
+      	constraint4.gridx = 0;
+      	constraint4.gridy = 3;
+      	
+      	String columns[] = {"doctorID", "Last Name", "Speciality"};
+      	table3 = new JTable(dbm.getDoctors(loggedUser), columns);
+      	table3.setBounds(30,40,200,300);
+      	JScrollPane sc = new JScrollPane(table3);
+      	frame4.add(sc, constraint4);
+      	
+      	
+      	//Button to submit change
+      	constraint4.gridy = 5;
+      	button3 = new JButton("Change Doctor");
+        button3.setBounds(50,100,95,30);  
+        frame4.add(button3, constraint4);
+          
+        text3 = new JTextField(5);
+        text3.setSize(100,20);
+        constraint4.gridx = 0;
+        constraint4.gridy = 4;
+        frame4.add(text3, constraint4);
+
+          
+        button3.addActionListener(new ActionListener()
+        {
+         	@Override
+          public void actionPerformed(ActionEvent event) 
+          {
+          	String doctorID = text3.getText();
+          	dbm.changeCurrentDoctor(doctorID, loggedUser);
+          	JOptionPane.showMessageDialog(frame4, "Doctor has Been Changed to Doctor ID: " + doctorID + " confirmation message will be received shortly.");
+          	dbm.addMessage(2, loggedUser);
+          }
+        });
+      	
+      	frame4.setVisible(true);
+      	
+      }
+      
 }

@@ -232,7 +232,7 @@ import java.util.Random;
 			
 			case 2:
 				
-				msgBody = "CHANGE DOCTOR";
+				msgBody = "You have now changed your primary doctor";
 				
 				break;
 				
@@ -317,14 +317,61 @@ import java.util.Random;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
-		
-		
+		}
 	}
 	
-	
-	
+	//Searches the messages table for all stored messages by the current user, and returns them as an array
+	public String[][] getDoctors(String pid) {
+			
+		String[][] resultData = new String[10][10];
+		int i = 0;
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from Doctors");
+			while (resultSet.next()) {
+				String DoctorID = resultSet.getString("DoctorID");
+				String LastName = resultSet.getString("lastName");
+				String Speciality = resultSet.getString("Speciality");
+				int j = 0;
+				resultData[i][j] = DoctorID;
+				j++;
+				resultData[i][j] = LastName;
+				j++;
+				resultData[i][j] = Speciality;
+				i++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+		return resultData;
+	}
+
+	public void changeCurrentDoctor(String input, String pid) {
+
+		int DoctorID = Integer.parseInt(input);
+		int prevDoctorID = Integer.parseInt(getDoctorID(pid));
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+			statement = connection.createStatement();
+
+			String query = " Update Patient Set DoctorID = ? where DoctorID = ?";
+
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setInt    (1, DoctorID);
+			preparedStmt.setInt    (2, prevDoctorID);
+
+			preparedStmt.execute();
+	  
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+		
 }
-		
-		
-	}
 
