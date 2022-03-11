@@ -229,7 +229,7 @@ public class PatientInterface
         constraintRB.gridy = 3;
         frameRB.add(labelRB, constraintRB);
         
-        textRB = new JTextField();
+        textRB = new JTextField(5);
         textRB.setSize(100,20);
         constraintRB.gridx = 0;
         constraintRB.gridy = 4;
@@ -273,7 +273,8 @@ public class PatientInterface
         constraintRB1.gridx = 1;
         constraintRB1.gridy = 1;
         
-        textRB1 = new JTextField();
+        textRB1 = new JTextField(12);
+        textRB1.setSize(100,20);
         frameRB1.add(textRB1, constraintRB1);
         
         constraintRB1.gridx = 0;
@@ -284,7 +285,8 @@ public class PatientInterface
         constraintRB1.gridx = 1;
         constraintRB1.gridy = 2;
         
-        textRB2 = new JTextField();
+        textRB2 = new JTextField(12);
+        textRB2.setSize(100,20);
         frameRB1.add(textRB2, constraintRB1);
         
         constraintRB1.gridx = 0;
@@ -295,7 +297,8 @@ public class PatientInterface
         constraintRB1.gridx = 1;
         constraintRB1.gridy = 3;
         
-        textRB3 = new JTextField();
+        textRB3 = new JTextField(12);
+        textRB3.setSize(100,20);
         frameRB1.add(textRB3, constraintRB1);
         
         constraintRB1.gridx = 1;
