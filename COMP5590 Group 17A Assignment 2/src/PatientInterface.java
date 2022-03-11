@@ -175,6 +175,19 @@ public class PatientInterface
             }
         });
         
+        buttonAB = new JButton("Ammend Bookings");
+        buttonAB.setBounds(50,100,95,30);  
+        frameViewM.add(buttonAB, constraint2);
+        
+        buttonAB.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+            	rescheduleBookings();
+            }
+        });
+        
         constraint2.gridx = 0;
         constraint2.gridy = 2;
 
