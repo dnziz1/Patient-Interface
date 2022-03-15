@@ -1,0 +1,9 @@
+-- Insert your SQL here
+DROP TABLE IF EXISTS logAccess;
+
+CREATE TABLE logAccess (
+    PatientID INTEGER,
+    dateAccessed DATE,
+    Functionality VARCHAR,
+    FOREIGN KEY (PatientID) REFERENCES Patient (patientID)
+);
