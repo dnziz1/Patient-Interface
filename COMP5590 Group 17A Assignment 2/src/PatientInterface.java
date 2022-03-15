@@ -76,6 +76,11 @@ public class PatientInterface
     private JButton buttonLogReg1;
     private JButton buttonLogReg2;
     
+    //Variables for the eight frame which will give the patient an option to register and login
+    private JFrame frameReg;
+    private JLabel labelReg;
+    private JButton buttonReg;
+    
     //Link to DBManager
     public DBManager dbm = new DBManager();	
     public String loggedUser;
@@ -135,16 +140,34 @@ public class PatientInterface
             public void actionPerformed(ActionEvent event)
             {
             	frameLogReg.setVisible(false);
-                setupInterface();
+            	registerInterface();
             }
         });
         frameLogReg.setVisible(true);
     }
     
+    //Method to create the register jframe
+    private void registerInterface()
+    {
+        frameReg = new JFrame("Patient Interface: Register");
+        frameReg.setSize(400, 200);
+        frameReg.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+        
+        labelReg = new JLabel("Register");
+        constraint.gridx = 0;
+        constraint.gridy = 1;
+        frameReg.add(labelReg, constraint);
+        
+        frameReg.setVisible(true);
+    }
+    
     //Method to create the starting login jframe
     private void setupInterface()
     {
-        frameMain = new JFrame("Patient Interface");
+        frameMain = new JFrame("Patient Interface: Login");
         frameMain.setSize(400, 200);
         frameMain.setLayout(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
