@@ -69,6 +69,13 @@ public class PatientInterface
     private JTextField textChangeD;
     private JButton buttonChangeD2;
     
+    //Variables for the eight frame which will give the patient an option to register and login
+    private JFrame frameLogReg;
+    private JLabel labelLogReg1;
+    private JLabel labelLogReg2;
+    private JButton buttonLogReg1;
+    private JButton buttonLogReg2;
+    
     //Link to DBManager
     public DBManager dbm = new DBManager();	
     public String loggedUser;
@@ -79,8 +86,59 @@ public class PatientInterface
     	
         //Create the patient interface
         PatientInterface pi = new PatientInterface();
-        pi.setupInterface();
+        pi.loginRegisterInterface();
         
+    }
+    
+    private void loginRegisterInterface()
+    {
+    	frameLogReg = new JFrame("Patient Interface: Register or Login");
+    	frameLogReg.setSize(400, 400);
+    	frameLogReg.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+
+        labelLogReg1 = new JLabel("Login as an existing patient:");
+        constraint.gridx = 1;
+        constraint.gridy = 1;
+        frameLogReg.add(labelLogReg1, constraint);
+        
+        buttonLogReg1 = new JButton("Login");
+        constraint.gridx = 1;
+        constraint.gridy = 2;
+        frameLogReg.add(buttonLogReg1, constraint);
+        //Action listener to check for the users click
+        buttonLogReg1.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+            	frameLogReg.setVisible(false);
+                setupInterface();
+            }
+        });
+        
+        labelLogReg2 = new JLabel("Register as a new patient:");
+        constraint.gridx = 1;
+        constraint.gridy = 3;
+        frameLogReg.add(labelLogReg2, constraint);
+        
+        buttonLogReg2 = new JButton("Register");
+        constraint.gridx = 1;
+        constraint.gridy = 4;
+        frameLogReg.add(buttonLogReg2, constraint);
+        //Action listener to check for the users click
+        buttonLogReg2.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+            	frameLogReg.setVisible(false);
+                setupInterface();
+            }
+        });
+        frameLogReg.setVisible(true);
     }
     
     //Method to create the starting login jframe
