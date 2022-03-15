@@ -1,0 +1,11 @@
+-- Insert your SQL here
+DROP TABLE IF EXISTS VPDetails;
+
+CREATE TABLE VPDetails (
+    PatientID INTEGER,
+    DoctorID INTEGER,
+    BookingID INTEGER,
+    visitDetails VARCHAR,
+    Prescriptions VARCHAR,
+    PRIMARY KEY (PatientID, DoctorID, BookingID)
+);
