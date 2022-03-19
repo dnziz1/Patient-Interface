@@ -45,6 +45,12 @@ public class PatientInterface
     private JTextField textRB3;
     private JButton buttonRB1;
     
+    //variables for view visit details and prescriptions JFrame
+    private JFrame frameVP;
+    private JLabel labelVP;
+    private JTable tableVP;
+
+    
     public DBManager dbm = new DBManager();	
     public String loggedUser;
 
@@ -325,6 +331,30 @@ public class PatientInterface
         });
         
         frameRB1.setVisible(true);
+        
+    }
+    
+    private void viewVisitPres() {
+    	frameVP = new JFrame("Patient Interface: View Visit Details and Prescriptions");
+    	frameVP.setLayout(new GridBagLayout());
+    	GridBagConstraints constraintVP = new GridBagConstraints();
+        constraintVP.gridx = 0;
+        constraintVP.gridy = 0;
+
+        frameRB.setSize(600, 600);
+        labelRB = new JLabel("Previous bookings: ");
+        frameRB.add(labelRB, constraintVP);
+        constraintVP.gridx = 0;
+        constraintVP.gridy = 2;
+        
+        //table
+        String columns[] = {"PatientID", "DoctorID", "BookingID", "Visit Details", "Prescriptions"};
+        tableVP = new JTable(dbm.getBookings(loggedUser), columns);
+        tableVP.setBounds(30,40,200,300);  
+        JScrollPane scRB = new JScrollPane(tableRB);
+        frameVP.add(scRB, constraintVP);
+        
+        frameVP.setVisible(true);
         
     }
 

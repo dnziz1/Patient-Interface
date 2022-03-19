@@ -183,5 +183,10 @@ import java.sql.Statement;
 		
 		
 	}
+		
+	public void getVisitDetails(String pID) {
+		
+	}
+	
 }
 
