@@ -184,8 +184,36 @@ import java.sql.Statement;
 		
 	}
 		
-	public void getVisitDetails(String pID) {
+	public String[][] getVisitDetails(String pID) {
 		
+		String[][] resultData = new String[10][10];
+		int i = 0;
+			
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from VPDetails where PatientID = " + "'" + pID + "'" + "");
+			while (resultSet.next()) {
+				String DoctorID = resultSet.getString("DoctorID");
+				String BookingID = resultSet.getString("BookingID");
+				String visitDetails = resultSet.getString("visitDetails");
+				String Prescriptions = resultSet.getString("Prescriptions");
+				int j = 0;
+				resultData[i][j] = DoctorID;
+				j++;
+				resultData[i][j] = BookingID;
+				j++;
+				resultData[i][j] = visitDetails;
+				j++;
+				resultData[i][j] = Prescriptions;
+				i++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+		return resultData;
 	}
 	
 }

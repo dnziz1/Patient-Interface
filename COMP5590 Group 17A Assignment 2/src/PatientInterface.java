@@ -49,6 +49,7 @@ public class PatientInterface
     private JFrame frameVP;
     private JLabel labelVP;
     private JTable tableVP;
+    private JButton buttonVDP;
 
     
     public DBManager dbm = new DBManager();	
@@ -149,8 +150,8 @@ public class PatientInterface
             }
         });
         
-        //constraint2.gridx = 2;
-        //constraint2.gridy = 0;
+        constraint2.gridx = 1;
+        constraint2.gridy = 0;
         buttonAB = new JButton("Ammend Bookings");
         buttonAB.setBounds(50,100,95,30);  
         frame2.add(buttonAB, constraint2);
@@ -161,6 +162,21 @@ public class PatientInterface
             public void actionPerformed(ActionEvent event)
             {
             	rescheduleBookings();
+            }
+        });
+        
+        constraint2.gridx = 2;
+        constraint2.gridy = 0;
+        buttonVDP = new JButton("View Visit Details and Perscriptions");
+        buttonVDP.setBounds(50,100,95,30);  
+        frame2.add(buttonVDP, constraint2);
+        
+        buttonVDP.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+            	viewVisitPres();
             }
         });
         
@@ -341,18 +357,18 @@ public class PatientInterface
         constraintVP.gridx = 0;
         constraintVP.gridy = 0;
 
-        frameRB.setSize(600, 600);
-        labelRB = new JLabel("Previous bookings: ");
-        frameRB.add(labelRB, constraintVP);
+        frameVP.setSize(600, 600);
+        labelVP = new JLabel("Previous bookings: ");
+        frameVP.add(labelVP, constraintVP);
         constraintVP.gridx = 0;
         constraintVP.gridy = 2;
         
         //table
-        String columns[] = {"PatientID", "DoctorID", "BookingID", "Visit Details", "Prescriptions"};
-        tableVP = new JTable(dbm.getBookings(loggedUser), columns);
+        String columns[] = {"DoctorID", "BookingID", "Visit Details", "Prescriptions"};
+        tableVP = new JTable(dbm.getVisitDetails(loggedUser), columns);
         tableVP.setBounds(30,40,200,300);  
-        JScrollPane scRB = new JScrollPane(tableRB);
-        frameVP.add(scRB, constraintVP);
+        JScrollPane scVP = new JScrollPane(tableVP);
+        frameVP.add(scVP, constraintVP);
         
         frameVP.setVisible(true);
         
