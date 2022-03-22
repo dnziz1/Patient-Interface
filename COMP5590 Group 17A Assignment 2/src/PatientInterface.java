@@ -280,7 +280,10 @@ public class PatientInterface
             	
             	dbm.registerPatient(email, username, password, firstName, lastName, sex, phoneNo, address);
             	frameReg.setVisible(false);
-            	changeDoctor();         
+            	
+            	loggedUser = dbm.getPID(username);
+            	
+            	changeDoctor();        
             	
             }
         
@@ -416,6 +419,7 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
+            	frameViewM.setVisible(false);
             	changeDoctor();
             }
         });
@@ -725,6 +729,9 @@ public class PatientInterface
           	      dbm.changeCurrentDoctor(doctorID, loggedUser);
           	      JOptionPane.showMessageDialog(frameChangeD, "Doctor has Been Changed to Doctor ID: " + doctorID + " confirmation message will be received shortly.");
           	      dbm.addMessage(2, loggedUser);
+          	     
+          	      frameChangeD.setVisible(false);
+          	      ViewMessages();
               }
          });
       	 frameChangeD.setVisible(true);

@@ -403,7 +403,7 @@ import java.util.Random;
 		      preparedStmt.setString (5, firstName);
 		      preparedStmt.setString (6, lastName);
 		      preparedStmt.setString (7, sex);
-		      preparedStmt.setString    (8, phoneNo);
+		      preparedStmt.setString (8, phoneNo);
 		      preparedStmt.setString (9, address);
 		      preparedStmt.setInt    (10, doctorID);
 
