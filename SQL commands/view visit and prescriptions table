@@ -5,7 +5,7 @@ CREATE TABLE VPDetails (
     PatientID INTEGER,
     DoctorID INTEGER,
     BookingID INTEGER,
-    visitDetails VARCHAR,
-    Prescriptions VARCHAR,
+    visitDetails VARCHAR (255),
+    Prescriptions VARCHAR (100),
     PRIMARY KEY (PatientID, DoctorID, BookingID)
 );
