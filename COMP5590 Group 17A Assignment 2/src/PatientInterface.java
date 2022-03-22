@@ -8,6 +8,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PatientInterface
 {
@@ -69,6 +74,13 @@ public class PatientInterface
     private JTextField textChangeD;
     private JButton buttonChangeD2;
     
+    //Variables for the eighth frame which  will log access
+    private JFrame frameLogA;
+    private JLabel labelLogA;
+    private final static Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private SimpleDateFormat format = new SimpleDateFormat("MM/dd/YY hh:mm a");
+    private Date currDate = new Date();
+    
     //Link to DBManager
     public DBManager dbm = new DBManager();	
     public String loggedUser;
@@ -80,6 +92,7 @@ public class PatientInterface
         //Create the patient interface
         PatientInterface pi = new PatientInterface();
         pi.setupInterface();
+        log.log(Level.INFO, "User access");
         
     }
     
@@ -146,6 +159,10 @@ public class PatientInterface
             }
         });
         frameMain.setVisible(true);
+        log.info(loggedUser + "has Logged into the system at" + format);
+        String msg = "Logged in";
+      	dbm.accessLogs(loggedUser, msg);
+        
     }
     //Method to create the viewmessages jframe
     private void ViewMessages()
@@ -231,6 +248,9 @@ public class PatientInterface
         frameViewM.add(sc, constraint2);
         
         frameViewM.setVisible(true);
+        log.info(loggedUser + "has accessed View Messages at" + format);
+        String msg = "View Messages";
+      	dbm.accessLogs(loggedUser, msg);
     } 
     
     //Method to create the viewbookings jframe
@@ -256,6 +276,9 @@ public class PatientInterface
         frameShowB.add(sc, constraint3);
         
         frameShowB.setVisible(true);
+        log.info(dbm.getPID(loggedUser) + "has accessed View Bookings at" + format);
+        String msg = "View Bookings";
+      	dbm.accessLogs(loggedUser, msg);
     }
     
     //Method to create the arrangenewbookings jframe
@@ -340,6 +363,9 @@ public class PatientInterface
         });
         
         frameArrangeB.setVisible(true);
+        log.info(loggedUser + "has accessed Arrange Booking at" + format);
+        String msg = "Arrange Booking";
+      	dbm.accessLogs(loggedUser, msg);
     }
     
     //Method to create the reschedulebookings jframe
@@ -404,7 +430,9 @@ public class PatientInterface
               }
           });
         
-        
+        log.info(loggedUser + "has accessed Reschedule Booking at" + format);
+        String msg = "Reschedule Booking";
+      	dbm.accessLogs(loggedUser, msg);
       }
       
       //Method to create the amendbookings jframe
@@ -474,7 +502,9 @@ public class PatientInterface
           });
           
           frameAmendB.setVisible(true);
-          
+          log.info(loggedUser + "has accessed Amend Booking at" + format);
+          String msg = "Amend Booking";
+          dbm.accessLogs(loggedUser, msg);
       }
       
       //Method to create the changedoctor jframe
@@ -522,7 +552,9 @@ public class PatientInterface
               }
          });
       	 frameChangeD.setVisible(true);
-      	
+      	log.info(loggedUser + "has accessed Change Doctor at" + format);
+      	String msg = "Change Doctor";
+      	dbm.accessLogs(loggedUser, msg);
       }
       
 }
