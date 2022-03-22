@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.text.*;
 //DB imports
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -79,6 +80,22 @@ public class PatientInterface
     //Variables for the eight frame which will give the patient an option to register and login
     private JFrame frameReg;
     private JLabel labelReg;
+    private JLabel labelReg1;
+    private JTextField textReg1;
+    private JLabel labelReg2;
+    private JTextField textReg2;
+    private JLabel labelReg3;
+    private JPasswordField textReg3;
+    private JLabel labelReg4;
+    private JTextField textReg4;
+    private JLabel labelReg5;
+    private JTextField textReg5;
+    private JLabel labelReg6;
+    private JTextField textReg6;
+    private JLabel labelReg7;
+    private JTextField textReg7;
+    private JLabel labelReg8;
+    private JTextField textReg8;
     private JButton buttonReg;
     
     //Link to DBManager
@@ -150,7 +167,7 @@ public class PatientInterface
     private void registerInterface()
     {
         frameReg = new JFrame("Patient Interface: Register");
-        frameReg.setSize(400, 200);
+        frameReg.setSize(600, 600);
         frameReg.setLayout(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
         constraint.gridx = 0;
@@ -160,6 +177,114 @@ public class PatientInterface
         constraint.gridx = 0;
         constraint.gridy = 1;
         frameReg.add(labelReg, constraint);
+        
+        labelReg1 = new JLabel("Enter an Email:");
+        constraint.gridx = 0;
+        constraint.gridy = 2;
+        frameReg.add(labelReg1, constraint);
+        
+        textReg1 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 3;
+        frameReg.add(textReg1, constraint);
+        
+        labelReg2 = new JLabel("Enter a Username:");
+        constraint.gridx = 0;
+        constraint.gridy = 4;
+        frameReg.add(labelReg2, constraint);
+        
+        textReg2 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 5;
+        frameReg.add(textReg2, constraint);
+        
+        labelReg3 = new JLabel("Enter a Password:");
+        constraint.gridx = 0;
+        constraint.gridy = 6;
+        frameReg.add(labelReg3, constraint);
+        
+        textReg3 = new JPasswordField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 7;
+        frameReg.add(textReg3, constraint);
+        
+        labelReg4 = new JLabel("Enter your Forename:");
+        constraint.gridx = 0;
+        constraint.gridy = 8;
+        frameReg.add(labelReg4, constraint);
+        
+        textReg4 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 9;
+        frameReg.add(textReg4, constraint);
+        
+        labelReg5 = new JLabel("Enter your Surname:");
+        constraint.gridx = 0;
+        constraint.gridy = 10;
+        frameReg.add(labelReg5, constraint);
+        
+        textReg5 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 11;
+        frameReg.add(textReg5, constraint);
+        
+        labelReg6 = new JLabel("Enter your Sex:");
+        constraint.gridx = 0;
+        constraint.gridy = 12;
+        frameReg.add(labelReg6, constraint);
+        
+        textReg6 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 13;
+        frameReg.add(textReg6, constraint);
+        
+        labelReg7 = new JLabel("Enter your Phone-number:");
+        constraint.gridx = 0;
+        constraint.gridy = 14;
+        frameReg.add(labelReg7, constraint);
+        
+        textReg7 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 15;
+        frameReg.add(textReg7, constraint);
+        
+        labelReg8 = new JLabel("Enter your Address:");
+        constraint.gridx = 0;
+        constraint.gridy = 16;
+        frameReg.add(labelReg8, constraint);
+        
+        textReg8 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 17;
+        frameReg.add(textReg8, constraint);
+        
+        //Button to submit the register details
+        buttonReg= new JButton("Register");
+        constraint.gridx = 0;
+        constraint.gridy = 19;
+        frameReg.add(buttonReg, constraint);
+        //Action listener to check for the users click
+        buttonReg.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+                String email = textReg1.getText();
+                String username = textReg2.getText();
+                String password = textReg3.getText();
+                String firstName = textReg4.getText();
+                String lastName = textReg5.getText();
+                String sex = textReg6.getText();
+                String phoneNo =  textReg7.getText();
+                String address = textReg8.getText();
+            	
+            	dbm.registerPatient(email, username, password, firstName, lastName, sex, phoneNo, address);
+            	frameReg.setVisible(false);
+            	changeDoctor();         
+            	
+            }
+        
+        });
         
         frameReg.setVisible(true);
     }
