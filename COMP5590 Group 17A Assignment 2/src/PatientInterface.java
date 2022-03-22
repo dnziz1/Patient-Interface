@@ -112,6 +112,7 @@ public class PatientInterface
         
     }
     
+    //First interface to login or register (NEW CHANGE)
     private void loginRegisterInterface()
     {
     	frameLogReg = new JFrame("Patient Interface: Register or Login");
@@ -163,7 +164,7 @@ public class PatientInterface
         frameLogReg.setVisible(true);
     }
     
-    //Method to create the register jframe
+    //Method to create the register jframe (NEW CHANGE)
     private void registerInterface()
     {
         frameReg = new JFrame("Patient Interface: Register");
@@ -292,7 +293,7 @@ public class PatientInterface
         frameReg.setVisible(true);
     }
     
-    //Method to create the starting login jframe
+    //Method to create the starting login jframe (NEW CHANGE)
     private void setupInterface()
     {
         frameMain = new JFrame("Patient Interface: Login");
@@ -419,7 +420,7 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
-            	frameViewM.setVisible(false);
+            	frameViewM.setVisible(false); //(NEW CHANGE)
             	changeDoctor();
             }
         });
@@ -730,8 +731,8 @@ public class PatientInterface
           	      JOptionPane.showMessageDialog(frameChangeD, "Doctor has Been Changed to Doctor ID: " + doctorID + " confirmation message will be received shortly.");
           	      dbm.addMessage(2, loggedUser);
           	     
-          	      frameChangeD.setVisible(false);
-          	      ViewMessages();
+          	      frameChangeD.setVisible(false); //(NEW CHANGE)
+          	      ViewMessages(); //(NEW CHANGE)
               }
          });
       	 frameChangeD.setVisible(true);

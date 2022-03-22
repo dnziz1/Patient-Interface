@@ -5,7 +5,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.Random;
 	
-//CHANGE DB BACK TO GLOBAL DB NAME a217a
+//CHANGE DB BACK TO GLOBAL DB NAME a217a (NEW CHANGE)
 	public class DBManager {
 		private Connection connection;
 		private Statement statement;
@@ -374,6 +374,7 @@ import java.util.Random;
 		}
 	}
 	
+	//(NEW CHANGE)
 	public void registerPatient(String Email, String Username, String Password, String FirstName, String LastName, String Sex, String PhoneNo, String Address) {
 		
 		String email = Email;
