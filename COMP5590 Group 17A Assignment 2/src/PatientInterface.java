@@ -300,6 +300,8 @@ public class PatientInterface
             	log.info("A New Patient Has Been Registered at " + format);
                 String msg = "New Patient Registered";
               	dbm.accessLogs(loggedUser, msg);
+              	
+        	    dbm.addMessage(1, loggedUser, null);
             	
             	changeDoctor();        
             	
@@ -574,6 +576,15 @@ public class PatientInterface
             	input[3] = yearField.getText();
             	
             	dbm.arrangeBooking(input, loggedUser);
+            	
+            	String[] dateInput = new String[3];
+            	dateInput[0] = dayField.getText();
+            	dateInput[1] = monthField.getText();
+            	dateInput[2] = yearField.getText();
+            	
+            	String bookingDate = dbm.constructAppointmentDate(dateInput);
+        	    dbm.addMessage(3, loggedUser, bookingDate);
+            	
             	frameArrangeB.setVisible(false);
             	viewBookings();
             
@@ -717,6 +728,9 @@ public class PatientInterface
                     
                  dbm.submittedBooking(input, bookingID);
                  
+                 String bookingDate = dbm.constructAppointmentDate(input);
+         	     dbm.addMessage(4, loggedUser, bookingDate);
+         	      
                  viewBookings();  
               }
           });
@@ -768,8 +782,9 @@ public class PatientInterface
         	  {
         		  String doctorID = textChangeD.getText();
           	      dbm.changeCurrentDoctor(doctorID, loggedUser);
-          	      JOptionPane.showMessageDialog(frameChangeD, "Doctor has Been Changed to Doctor ID: " + doctorID + " confirmation message will be received shortly.");
-          	      dbm.addMessage(2, loggedUser);
+          	      //JOptionPane.showMessageDialog(frameChangeD, "Doctor has Been Changed to Doctor ID: " + doctorID + " confirmation message will be received shortly.");
+          	      String doctorLastName = dbm.getDoctorLastName(doctorID);
+          	      dbm.addMessage(2, loggedUser, doctorLastName);
           	     
           	      frameChangeD.setVisible(false); //(NEW CHANGE)
           	      ViewMessages(); //(NEW CHANGE)

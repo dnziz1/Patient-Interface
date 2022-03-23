@@ -75,7 +75,7 @@ import java.util.Random;
 		//Searches the messages table for all stored messages by the current user, and returns them as an array
 		public String[][] getMessages(String pid) {
 			
-			String[][] resultData = new String[10][10];
+			String[][] resultData = new String[25][25];
 			int i = 0;
 			
 			try {
@@ -102,7 +102,7 @@ import java.util.Random;
 		//Searches the messages table for all stored messages by the current user, and returns them as an array
 		public String[][] getBookings(String pid) {
 				
-			String[][] resultData = new String[10][10];
+			String[][] resultData = new String[20][20];
 			int i = 0;
 				
 			try {
@@ -176,7 +176,7 @@ import java.util.Random;
 			int id = 0;
 			
 			Random rm = new Random();
-			id = 1 + rm.nextInt((100 - 1) + 1);
+			id = 1 + rm.nextInt((500 - 1) + 1);
 			
 			// Method needs rewriting to account for checking different tables. Having a check prior would be sufficient
 			try {
@@ -219,7 +219,7 @@ import java.util.Random;
 		}
 		
 		//Generates a message and adds it to the Messages Table in the database based on the parameter msgCode
-		public void addMessage(int msgCode, String pid) {
+		public void addMessage(int msgCode, String pid, String additionalInput) {
 			
 			String msgBody = null;
 			
@@ -227,25 +227,25 @@ import java.util.Random;
 			switch (msgCode) {
 			case 1:
 				
-				msgBody = "NEW PATIENT";
+				msgBody = "Your Patient Registration is Complete";
 				
 				break;
 			
 			case 2:
 				
-				msgBody = "You have now changed your primary doctor";
+				msgBody = "Your Primary Doctor is Now " + additionalInput;
 				
 				break;
 				
 			case 3:
 				
-				msgBody = "You have made a new appointment at the clinic";
+				msgBody = "New Appointment Scheduled for " + additionalInput;
 				
 				break;
 				
 			case 4:
 				
-				msgBody = "RESCHEDULE BOOKING";
+				msgBody = "Appointment Rescheduled for " + additionalInput;
 				
 				break;
 			
@@ -272,6 +272,35 @@ import java.util.Random;
 					e.printStackTrace();
 				}
 			
+		}
+		
+		//Executes a query to find the last name of a doctor using the parameter doctorID and returns it if found, or null
+		public String getDoctorLastName(String doctorID) {
+			
+			String result;
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+				statement = connection.createStatement();
+				resultSet = statement.executeQuery("select lastName from doctors where doctorID = " + "'" + doctorID + "'" + "");
+				if (resultSet.next()) {
+					result = resultSet.getString("lastName");
+					return result;
+				} else {
+					return null;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+			
+		}
+		
+		//Takes the details of an appointment form and builds them into a formatted string, returning it when completed
+		public String constructAppointmentDate(String[] appointmentDetails) {
+			
+			String appointmentDate = appointmentDetails[0] + "/" + appointmentDetails[1] + "/" + appointmentDetails[2];
+			return appointmentDate;
 		}
 		
 		
@@ -324,7 +353,7 @@ import java.util.Random;
 	//Searches the messages table for all stored messages by the current user, and returns them as an array
 	public String[][] getDoctors(String pid) {
 			
-		String[][] resultData = new String[10][10];
+		String[][] resultData = new String[20][20];
 		int i = 0;
 		
 		try {
@@ -417,7 +446,7 @@ import java.util.Random;
 	
 	public String[][] getVisitDetails(String pID) {
 		
-		String[][] resultData = new String[10][10];
+		String[][] resultData = new String[20][20];
 		int i = 0;
 			
 		try {
