@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.util.Random;
 	
 	public class DBManager {
@@ -446,6 +447,31 @@ import java.util.Random;
 		return resultData;
 	}
 
+	public void accessLogs(String pid, String funct ) {
+		
+		int patientId = Integer.parseInt(pid);
+		String functionality = funct;
+		Timestamp dateTime = new Timestamp(System.currentTimeMillis());
+		
+		try {
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+		statement = connection.createStatement();
+		
+		String query = " insert into logAccess (patientId, dateAccessed, functionality)"
+		        + " values (?, ?, ?)";
+
+		      PreparedStatement preparedStmt = connection.prepareStatement(query);
+		      preparedStmt.setInt    (1, patientId);
+		      preparedStmt.setTimestamp(2, dateTime);
+		      preparedStmt.setString    (3, functionality);
+
+		      preparedStmt.execute();
+		      
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 		
 }
