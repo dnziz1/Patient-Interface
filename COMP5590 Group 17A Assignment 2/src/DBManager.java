@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.Random;
 	
-//CHANGE DB BACK TO GLOBAL DB NAME a217a (NEW CHANGE)
 	public class DBManager {
 		private Connection connection;
 		private Statement statement;
@@ -20,7 +19,7 @@ import java.util.Random;
 		public void testConnection() {
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select * from patient");
 				while (resultSet.next())
@@ -36,7 +35,7 @@ import java.util.Random;
 		public boolean checkLogin(String un, String pw) {
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select username, password from patient where username = " + "'" + un + "'" + " AND password = " + "'" + pw + "'" + "");
 				if (resultSet.next()) {
@@ -56,7 +55,7 @@ import java.util.Random;
 			String result;
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select patientid from patient where username = " + "'" + un + "'" + "");
 				if (resultSet.next()) {
@@ -80,7 +79,7 @@ import java.util.Random;
 			
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select * from messages where pid = " + "'" + pid + "'" + "");
 				while (resultSet.next()) {
@@ -107,7 +106,7 @@ import java.util.Random;
 				
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select * from Bookings where patientID = " + "'" + pid + "'" + "");
 				while (resultSet.next()) {
@@ -148,7 +147,7 @@ import java.util.Random;
 			
 			try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 			statement = connection.createStatement();
 			
 			String query = " insert into Bookings (BookingID, PatientID, DoctorID, Room, Day, Month, Year)"
@@ -181,7 +180,7 @@ import java.util.Random;
 			// Method needs rewriting to account for checking different tables. Having a check prior would be sufficient
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select * from Bookings where BookingID = " + "'" + id + "'" + "");
 				if (resultSet.next()) {
@@ -202,7 +201,7 @@ import java.util.Random;
 			String result;
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery("select doctorID from patient where patientID = " + "'" + pid + "'" + "");
 				if (resultSet.next()) {
@@ -255,7 +254,7 @@ import java.util.Random;
 				
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 				statement = connection.createStatement();
 				
 				String query = " insert into Messages (messageID, messageBody, pID)"
@@ -285,7 +284,7 @@ import java.util.Random;
 			
 			try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 			statement = connection.createStatement();
 			
 			String query = " Update Bookings Set day = ?, month = ?, year = ? where bookingID = ?";
@@ -307,7 +306,7 @@ import java.util.Random;
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("select BookingID from Bookings where PatientID = " + "'" + pID + "'" + " AND BookingID = " + "'" + bID + "'" + "");
 			if (resultSet.next()) {
@@ -329,7 +328,7 @@ import java.util.Random;
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("select * from Doctors");
 			while (resultSet.next()) {
@@ -358,7 +357,7 @@ import java.util.Random;
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 			statement = connection.createStatement();
 
 			String query = " Update Patient Set DoctorID = ? where DoctorID = ?";
@@ -374,7 +373,7 @@ import java.util.Random;
 		}
 	}
 	
-	//(NEW CHANGE)
+	//
 	public void registerPatient(String Email, String Username, String Password, String FirstName, String LastName, String Sex, String PhoneNo, String Address) {
 		
 		String email = Email;
@@ -390,7 +389,7 @@ import java.util.Random;
 		
 		try {
 		Class.forName("com.mysql.cj.jdbc.Driver");
-		connection = DriverManager.getConnection("jdbc:mysql://localhost/a2_localDB?user=root&password=root");
+		connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 		statement = connection.createStatement();
 		
 		String query = " insert into Patient (email, username, password, patientID, firstName, lastName, sex, phoneNo, address, doctorID)"
