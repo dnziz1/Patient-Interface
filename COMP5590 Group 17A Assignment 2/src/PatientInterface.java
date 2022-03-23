@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.text.*;
 //DB imports
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -69,6 +70,34 @@ public class PatientInterface
     private JTextField textChangeD;
     private JButton buttonChangeD2;
     
+    //Variables for the eight frame which will give the patient an option to register and login
+    private JFrame frameLogReg;
+    private JLabel labelLogReg1;
+    private JLabel labelLogReg2;
+    private JButton buttonLogReg1;
+    private JButton buttonLogReg2;
+    
+    //Variables for the eight frame which will give the patient an option to register and login
+    private JFrame frameReg;
+    private JLabel labelReg;
+    private JLabel labelReg1;
+    private JTextField textReg1;
+    private JLabel labelReg2;
+    private JTextField textReg2;
+    private JLabel labelReg3;
+    private JPasswordField textReg3;
+    private JLabel labelReg4;
+    private JTextField textReg4;
+    private JLabel labelReg5;
+    private JTextField textReg5;
+    private JLabel labelReg6;
+    private JTextField textReg6;
+    private JLabel labelReg7;
+    private JTextField textReg7;
+    private JLabel labelReg8;
+    private JTextField textReg8;
+    private JButton buttonReg;
+    
     //Link to DBManager
     public DBManager dbm = new DBManager();	
     public String loggedUser;
@@ -79,14 +108,195 @@ public class PatientInterface
     	
         //Create the patient interface
         PatientInterface pi = new PatientInterface();
-        pi.setupInterface();
+        pi.loginRegisterInterface();
         
     }
     
-    //Method to create the starting login jframe
+    //First interface to login or register (NEW CHANGE)
+    private void loginRegisterInterface()
+    {
+    	frameLogReg = new JFrame("Patient Interface: Register or Login");
+    	frameLogReg.setSize(400, 400);
+    	frameLogReg.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+
+        labelLogReg1 = new JLabel("Login as an existing patient:");
+        constraint.gridx = 1;
+        constraint.gridy = 1;
+        frameLogReg.add(labelLogReg1, constraint);
+        
+        buttonLogReg1 = new JButton("Login");
+        constraint.gridx = 1;
+        constraint.gridy = 2;
+        frameLogReg.add(buttonLogReg1, constraint);
+        //Action listener to check for the users click
+        buttonLogReg1.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+            	frameLogReg.setVisible(false);
+                setupInterface();
+            }
+        });
+        
+        labelLogReg2 = new JLabel("Register as a new patient:");
+        constraint.gridx = 1;
+        constraint.gridy = 3;
+        frameLogReg.add(labelLogReg2, constraint);
+        
+        buttonLogReg2 = new JButton("Register");
+        constraint.gridx = 1;
+        constraint.gridy = 4;
+        frameLogReg.add(buttonLogReg2, constraint);
+        //Action listener to check for the users click
+        buttonLogReg2.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+            	frameLogReg.setVisible(false);
+            	registerInterface();
+            }
+        });
+        frameLogReg.setVisible(true);
+    }
+    
+    //Method to create the register jframe (NEW CHANGE)
+    private void registerInterface()
+    {
+        frameReg = new JFrame("Patient Interface: Register");
+        frameReg.setSize(600, 600);
+        frameReg.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+        
+        labelReg = new JLabel("Register");
+        constraint.gridx = 0;
+        constraint.gridy = 1;
+        frameReg.add(labelReg, constraint);
+        
+        labelReg1 = new JLabel("Enter an Email:");
+        constraint.gridx = 0;
+        constraint.gridy = 2;
+        frameReg.add(labelReg1, constraint);
+        
+        textReg1 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 3;
+        frameReg.add(textReg1, constraint);
+        
+        labelReg2 = new JLabel("Enter a Username:");
+        constraint.gridx = 0;
+        constraint.gridy = 4;
+        frameReg.add(labelReg2, constraint);
+        
+        textReg2 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 5;
+        frameReg.add(textReg2, constraint);
+        
+        labelReg3 = new JLabel("Enter a Password:");
+        constraint.gridx = 0;
+        constraint.gridy = 6;
+        frameReg.add(labelReg3, constraint);
+        
+        textReg3 = new JPasswordField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 7;
+        frameReg.add(textReg3, constraint);
+        
+        labelReg4 = new JLabel("Enter your Forename:");
+        constraint.gridx = 0;
+        constraint.gridy = 8;
+        frameReg.add(labelReg4, constraint);
+        
+        textReg4 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 9;
+        frameReg.add(textReg4, constraint);
+        
+        labelReg5 = new JLabel("Enter your Surname:");
+        constraint.gridx = 0;
+        constraint.gridy = 10;
+        frameReg.add(labelReg5, constraint);
+        
+        textReg5 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 11;
+        frameReg.add(textReg5, constraint);
+        
+        labelReg6 = new JLabel("Enter your Sex:");
+        constraint.gridx = 0;
+        constraint.gridy = 12;
+        frameReg.add(labelReg6, constraint);
+        
+        textReg6 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 13;
+        frameReg.add(textReg6, constraint);
+        
+        labelReg7 = new JLabel("Enter your Phone-number:");
+        constraint.gridx = 0;
+        constraint.gridy = 14;
+        frameReg.add(labelReg7, constraint);
+        
+        textReg7 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 15;
+        frameReg.add(textReg7, constraint);
+        
+        labelReg8 = new JLabel("Enter your Address:");
+        constraint.gridx = 0;
+        constraint.gridy = 16;
+        frameReg.add(labelReg8, constraint);
+        
+        textReg8 = new JTextField(12);
+        constraint.gridx = 0;
+        constraint.gridy = 17;
+        frameReg.add(textReg8, constraint);
+        
+        //Button to submit the register details
+        buttonReg= new JButton("Register");
+        constraint.gridx = 0;
+        constraint.gridy = 19;
+        frameReg.add(buttonReg, constraint);
+        //Action listener to check for the users click
+        buttonReg.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+                String email = textReg1.getText();
+                String username = textReg2.getText();
+                String password = textReg3.getText();
+                String firstName = textReg4.getText();
+                String lastName = textReg5.getText();
+                String sex = textReg6.getText();
+                String phoneNo =  textReg7.getText();
+                String address = textReg8.getText();
+            	
+            	dbm.registerPatient(email, username, password, firstName, lastName, sex, phoneNo, address);
+            	frameReg.setVisible(false);
+            	
+            	loggedUser = dbm.getPID(username);
+            	
+            	changeDoctor();        
+            	
+            }
+        
+        });
+        
+        frameReg.setVisible(true);
+    }
+    
+    //Method to create the starting login jframe (NEW CHANGE)
     private void setupInterface()
     {
-        frameMain = new JFrame("Patient Interface");
+        frameMain = new JFrame("Patient Interface: Login");
         frameMain.setSize(400, 200);
         frameMain.setLayout(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
@@ -210,6 +420,7 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
+            	frameViewM.setVisible(false); //(NEW CHANGE)
             	changeDoctor();
             }
         });
@@ -519,6 +730,9 @@ public class PatientInterface
           	      dbm.changeCurrentDoctor(doctorID, loggedUser);
           	      JOptionPane.showMessageDialog(frameChangeD, "Doctor has Been Changed to Doctor ID: " + doctorID + " confirmation message will be received shortly.");
           	      dbm.addMessage(2, loggedUser);
+          	     
+          	      frameChangeD.setVisible(false); //(NEW CHANGE)
+          	      ViewMessages(); //(NEW CHANGE)
               }
          });
       	 frameChangeD.setVisible(true);
