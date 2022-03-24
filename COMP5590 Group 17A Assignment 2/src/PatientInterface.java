@@ -14,6 +14,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+* Main class to handle all of the UI aspect of the project will methods to create
+* each aspect of the interface with a main method to initialise the starting UI for the user
+*/
 public class PatientInterface
 {
     //Variables for the first frame which will be the main login frame
@@ -102,7 +106,7 @@ public class PatientInterface
     private JTextField textReg8;
     private JButton buttonReg;
     
-  //variables for view visit details and prescriptions JFrame
+    //variables for view visit details and prescriptions JFrame
     private JFrame frameVP;
     private JLabel labelVP;
     private JTable tableVP;
@@ -122,11 +126,16 @@ public class PatientInterface
     	
         //Create the patient interface
         PatientInterface pi = new PatientInterface();
+        //Create the starting interface which will give the user
+        //the option to login or Register
         pi.loginRegisterInterface();
         
     }
     
-    //First interface to login or register (NEW CHANGE)
+    /**
+    * First method to create the starting interface which will be the first thing
+    * the user will see and will prompt them to either login or Register
+    */
     private void loginRegisterInterface()
     {
     	frameLogReg = new JFrame("Patient Interface: Register or Login");
@@ -151,6 +160,8 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
+                //If the user choses to login they will be sent to the login
+                //frame
             	frameLogReg.setVisible(false);
                 setupInterface();
             }
@@ -171,6 +182,8 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
+                //If the user choses to Register they will be sent to the Register
+                //frame
             	frameLogReg.setVisible(false);
             	registerInterface();
             }
@@ -178,6 +191,11 @@ public class PatientInterface
         frameLogReg.setVisible(true);
     }
     
+    /**
+    * This method will create a frame to allow the user to register as a new
+    * patient which will also update the DB with their details and also
+    * let them into the system
+    */
     //Method to create the register jframe (NEW CHANGE)
     private void registerInterface()
     {
@@ -188,6 +206,7 @@ public class PatientInterface
         constraint.gridx = 0;
         constraint.gridy = 0;
         
+        //A label and button for each field the user is require to enter
         labelReg = new JLabel("Register");
         constraint.gridx = 0;
         constraint.gridy = 1;
@@ -273,7 +292,7 @@ public class PatientInterface
         constraint.gridy = 17;
         frameReg.add(textReg8, constraint);
         
-        //Button to submit the register details
+        //Button to submit the registered details
         buttonReg= new JButton("Register");
         constraint.gridx = 0;
         constraint.gridy = 19;
@@ -284,6 +303,7 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
+                //Collect all the users entered information
                 String email = textReg1.getText();
                 String username = textReg2.getText();
                 String password = textReg3.getText();
@@ -293,26 +313,32 @@ public class PatientInterface
                 String phoneNo =  textReg7.getText();
                 String address = textReg8.getText();
             	
+                //Use the DB manager method to register a patient with the above details into the DB
             	dbm.registerPatient(email, username, password, firstName, lastName, sex, phoneNo, address);
             	frameReg.setVisible(false);
             	
+                //Set the new user as the currently logged in user
             	loggedUser = dbm.getPID(username);
+
+                //Send messages out
             	log.info("A New Patient Has Been Registered at " + format);
                 String msg = "New Patient Registered";
               	dbm.accessLogs(loggedUser, msg);
               	
         	    dbm.addMessage(1, loggedUser, null);
             	
+                //Allow the user to change their doctor
             	changeDoctor();        
-            	
             }
-        
         });
-        
         frameReg.setVisible(true);
     }
     
-    //Method to create the starting login jframe (NEW CHANGE)
+    /**
+    * This method will create a frame to allow the user to Login as an existing
+    * patient provided they pass the checks on the DB to make sure the user does in fact
+    * exist
+    */
     private void setupInterface()
     {
         frameMain = new JFrame("Patient Interface: Login");
@@ -323,27 +349,27 @@ public class PatientInterface
         constraint.gridy = 0;
 
         labelMain = new JLabel("Login");
-        frameMain.add(labelMain, constraint);
         constraint.gridx = 0;
         constraint.gridy = 1;
+        frameMain.add(labelMain, constraint);
 
         //Username text field
         labelMain = new JLabel("Username: ");
         frameMain.add(labelMain, constraint);
         constraint.gridx = 1;
         usernameField = new JTextField(12);
-        frameMain.add(usernameField, constraint);
         constraint.gridx = 0;
         constraint.gridy = 2;
+        frameMain.add(usernameField, constraint);
 
         //Password password field (in order to hide password when its entered)
         labelMain = new JLabel("Password: ");
         frameMain.add(labelMain, constraint);
         constraint.gridx = 1;
         passwordField = new JPasswordField(12);
-        frameMain.add(passwordField, constraint);
         constraint.gridx = 1;
         constraint.gridy = 3;
+        frameMain.add(passwordField, constraint);
 
         //Button to submit the login details
         buttonMain = new JButton("Enter");
@@ -377,33 +403,35 @@ public class PatientInterface
                 }
             }
         });
-        
-        frameMain.setVisible(true);
-      	
+        frameMain.setVisible(true);	
     }
-    //Method to create the viewmessages jframe
+
+    /**
+    * This method will create a frame to show the user their current messages when called
+    */
     private void ViewMessages()
     {
         frameViewM = new JFrame("Patient Interface: View Messages");
         frameViewM.setLayout(new GridBagLayout());
-        GridBagConstraints constraint2 = new GridBagConstraints();
         constraint2.gridx = 0;
         constraint2.gridy = 0;
+        GridBagConstraints constraint2 = new GridBagConstraints();
         
+        //Create button to allow user to make a new booking
         buttonViewM2 = new JButton("Make New Bookings");
         buttonViewM2.setBounds(50,100,95,30);  
         frameViewM.add(buttonViewM2, constraint2);
-
         buttonViewM2.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent event)
             {
+                //Call arrange new booking interface
             	arrangeNewBooking();
             }
         });
         
-        //Button to open the View Bookings Window
+        //Create button to allow user to open the View Bookings Window
         constraint2.gridx = 1;
         buttonViewM1 = new JButton("View Bookings");
         buttonViewM1.setBounds(50,100,95,30);  
@@ -414,66 +442,67 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
+                //Call view bookings interface
             	viewBookings();
             }
         });
-        
+        //Create button to allow user to ammend bookings
         constraint2.gridy = 1;
         constraint2.gridx = 0;
         buttonResB1 = new JButton("Ammend Bookings");
         buttonResB1.setBounds(50,100,95,30);  
         frameViewM.add(buttonResB1, constraint2);
-        
         buttonResB1.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent event)
             {
+                //Call reschedule bookings interface
             	rescheduleBookings();
             }
         });
-        
+        //Create button to allow user to change doctor
         constraint2.gridy = 1;
         constraint2.gridx = 1;
         buttonChangeD1 = new JButton("Change Doctor");
         buttonChangeD1.setBounds(50,100,95,30);  
         frameViewM.add(buttonChangeD1, constraint2);
-        
         buttonChangeD1.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent event)
             {
-            	frameViewM.setVisible(false); //(NEW CHANGE)
+                //Call change doctor interface
+            	frameViewM.setVisible(false);
             	changeDoctor();
             }
         });
-        
+        //Show the users messages
         constraint2.gridx = 0;
         constraint2.gridy = 2;
-
         frameViewM.setSize(600, 600);
         labelViewM = new JLabel("View Messages");
         frameViewM.add(labelViewM, constraint2);
         constraint2.gridx = 0;
         constraint2.gridy = 3;
-
+        //Create table to display the users current messages
         String columns[] = {"ID", "Message"};
         tableViewM = new JTable(dbm.getMessages(loggedUser), columns);
         tableViewM.setBounds(30,40,200,300);  
         tableViewM.getColumnModel().getColumn(0).setPreferredWidth(1);
         JScrollPane sc = new JScrollPane(tableViewM);
         frameViewM.add(sc, constraint2);
-        
+        //Create message for user logging
         frameViewM.setVisible(true);
         log.info(loggedUser + "has accessed View Messages at" + format);
         String msg = "View Messages";
       	dbm.accessLogs(loggedUser, msg);
-      	
     } 
     
-    //Method to create the viewbookings jframe
-    //Populates the frame with all current bookings for the logged in patient
+    /**
+    * This method will create a frame to show the user their bookings by populating
+    * the frame with all current bookings for the currently logged in patient
+    */
     private void viewBookings() 
     {
     	frameShowB = new JFrame("Patient Interface: View Bookings");
@@ -484,25 +513,28 @@ public class PatientInterface
 
         frameShowB.setSize(600, 600);
         labelShowB = new JLabel("All Current Bookings");
-        frameShowB.add(labelShowB, constraint3);
         constraint3.gridx = 0;
         constraint3.gridy = 2;
+        frameShowB.add(labelShowB, constraint3);
 
+        //Create table to show the user their bookings from the DB
         String columns[] = {"Id","Room", "Day","Month", "Year"};
         tableViewM = new JTable(dbm.getBookings(loggedUser), columns);
         tableViewM.setBounds(30,40,200,300);  
         JScrollPane sc = new JScrollPane(tableViewM);
         frameShowB.add(sc, constraint3);
         
+        //Create message to log the users action
         frameShowB.setVisible(true);
         log.info(dbm.getPID(loggedUser) + "has accessed View Bookings at" + format);
         String msg = "View Bookings";
       	dbm.accessLogs(loggedUser, msg);
-      	
     }
     
-    //Method to create the arrangenewbookings jframe
-    //Displays a form to input new booking information
+    /**
+    * This method will create a frame to allow the user to arrange bookings by displaying a form
+    * for the user to input information for that booking
+    */
     private void arrangeNewBooking() 
     {
     	frameArrangeB = new JFrame("Book New Appointment");
@@ -567,7 +599,7 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
-                
+                //Input users data using the DB manager class
             	String[] input = new String[4];
 
             	input[0] = locationField.getText();
@@ -586,19 +618,20 @@ public class PatientInterface
         	    dbm.addMessage(3, loggedUser, bookingDate);
             	
             	frameArrangeB.setVisible(false);
+                //Show the users bookings
             	viewBookings();
-            
             }
         });
-        
+        //Create message to log users activity
         frameArrangeB.setVisible(true);
         log.info(loggedUser + "has accessed Arrange Booking at" + format);
         String msg = "Arrange Booking";
-      	dbm.accessLogs(loggedUser, msg);
-      	
+      	dbm.accessLogs(loggedUser, msg); 	
     }
     
-    //Method to create the reschedulebookings jframe
+    /**
+    * This method will create a frame to allow the user to reschedule Bookings
+    */
     private void rescheduleBookings() 
     {
     	frameResB = new JFrame("Patient Interface: Reschedule Bookings");
@@ -609,9 +642,9 @@ public class PatientInterface
 
         frameResB.setSize(600, 600);
         labelResB = new JLabel("Previous bookings: ");
-        frameResB.add(labelResB, constraintRB);
         constraintRB.gridx = 0;
         constraintRB.gridy = 2;
+        frameResB.add(labelResB, constraintRB);
           
         //Table
         String columns[] = {"BookingID", "Room", "Day", "Month", "Year"};
@@ -634,39 +667,40 @@ public class PatientInterface
         constraintRB.gridy = 4;
         frameResB.add(textResB, constraintRB);
           
+        //Button to submit the users changed information
         buttonResB2 = new JButton("Submit");
         buttonResB2.setBounds(50,100,95,30);
         constraintRB.gridx = 0;
         constraintRB.gridy = 5;
         frameResB.add(buttonResB2, constraintRB);
-
         buttonResB2.addActionListener(new ActionListener() 
         {
         	@Override
             public void actionPerformed(ActionEvent event)
             {
         		String input = textResB.getText();
-                 
+                //Validate the booking information
                 if (dbm.isValidBookingID(loggedUser,input)) 
                 {
                 	amendBooking(input);
                 }
                 else 
                 {
+                    //Show popup to inform user of incorrect booking
                 	JOptionPane.showMessageDialog(frameResB, "Not a Valid Booking ID for This User");
                     textResB.setText("");
                 }
-                 
               }
           });
-        
+        //Create message to log users activity
         log.info(loggedUser + "has accessed Reschedule Booking at" + format);
         String msg = "Reschedule Booking";
-      	dbm.accessLogs(loggedUser, msg);
-        
+      	dbm.accessLogs(loggedUser, msg);     
       }
       
-      //Method to create the amendbookings jframe
+      /**
+      * This method will create a frame to allow the user to ammend their bookings
+      */
       private void amendBooking(String bookingID) 
       {
     	  frameAmendB = new JFrame("Patient Interface: Amend Booking");
@@ -675,11 +709,12 @@ public class PatientInterface
           constraintRB1.gridx = 0;
           constraintRB1.gridy = 1;
 
+          //Setup user inputs
           frameAmendB.setSize(600, 600);
           labelAmendB1 = new JLabel("Day: ");
-          frameAmendB.add(labelAmendB1, constraintRB1);
           constraintRB1.gridx = 1;
           constraintRB1.gridy = 1;
+          frameAmendB.add(labelAmendB1, constraintRB1);
           
           textAmendB1 = new JTextField(12);
           textAmendB1.setSize(100,20);
@@ -690,9 +725,9 @@ public class PatientInterface
           frameAmendB.setSize(600, 600);
           labelAmendB2 = new JLabel("Month: ");
           frameAmendB.add(labelAmendB2, constraintRB1);
+
           constraintRB1.gridx = 1;
           constraintRB1.gridy = 2;
-          
           textAmendB2 = new JTextField(12);
           textAmendB2.setSize(100,20);
           frameAmendB.add(textAmendB2, constraintRB1);
@@ -702,47 +737,50 @@ public class PatientInterface
           frameAmendB.setSize(600, 600);
           labelAmendB3 = new JLabel("Year: ");
           frameAmendB.add(labelAmendB3, constraintRB1);
+
           constraintRB1.gridx = 1;
           constraintRB1.gridy = 3;
-          
           textAmendB3 = new JTextField(12);
           textAmendB3.setSize(100,20);
           frameAmendB.add(textAmendB3, constraintRB1);
           
+          //Button to allow the user to submit their changes to the DB
           constraintRB1.gridx = 1;
           constraintRB1.gridy = 4;
           buttonAmendB = new JButton("Submit");
           buttonAmendB.setBounds(50,100,95,30);  
           frameAmendB.add(buttonAmendB, constraintRB1);
-
           buttonAmendB.addActionListener(new ActionListener() 
           {
               @Override
               public void actionPerformed(ActionEvent event)
               {
-                 String[]input = new String[3];
+                  //Submit booking using DB method
+                  String[]input = new String[3];
                  
-                 input[0] = textAmendB1.getText();
-                 input[1] = textAmendB2.getText();
-                 input[2] = textAmendB3.getText();
+                  input[0] = textAmendB1.getText();
+                  input[1] = textAmendB2.getText();
+                  input[2] = textAmendB3.getText();
                     
-                 dbm.submittedBooking(input, bookingID);
+                  dbm.submittedBooking(input, bookingID);
                  
-                 String bookingDate = dbm.constructAppointmentDate(input);
-         	     dbm.addMessage(4, loggedUser, bookingDate);
+                  String bookingDate = dbm.constructAppointmentDate(input);
+         	      dbm.addMessage(4, loggedUser, bookingDate);
          	      
-                 viewBookings();  
+                  viewBookings();  
               }
           });
-          
+          //Log users access
           frameAmendB.setVisible(true);
           log.info(loggedUser + "has accessed Amend Booking at" + format);
           String msg = "Amend Booking";
-          dbm.accessLogs(loggedUser, msg);
-          
+          dbm.accessLogs(loggedUser, msg);     
       }
       
-      //Method to create the changedoctor jframe
+      /**
+      * This method will create a frame to allow the user to change their doctor to whatever
+      * Doctor ID they select from a displayed table of all doctors and IDs
+      */
       private void changeDoctor()
       {
     	  frameChangeD = new JFrame("Patient Interface: Change Doctor");
@@ -751,11 +789,12 @@ public class PatientInterface
       	  constraint4.gridx = 0;
       	  constraint4.gridy = 0;
       	
+          //Table to display current doctors and their IDs
       	  frameChangeD.setSize(600, 600);
       	  labelChangeD = new JLabel("Available Doctors List");
-      	  frameChangeD.add(labelChangeD, constraint4);
-      	  constraint4.gridx = 0;
+          constraint4.gridx = 0;
       	  constraint4.gridy = 3;
+      	  frameChangeD.add(labelChangeD, constraint4);
       	
       	  String columns[] = {"doctorID", "Last Name", "Speciality"};
       	  tableChangeD = new JTable(dbm.getDoctors(loggedUser), columns);
@@ -774,54 +813,51 @@ public class PatientInterface
           constraint4.gridx = 0;
           constraint4.gridy = 4;
           frameChangeD.add(textChangeD, constraint4);
-
           buttonChangeD2.addActionListener(new ActionListener()
           {
         	  @Override
               public void actionPerformed(ActionEvent event) 
         	  {
+                  //Change doctor using the DB manager method
         		  String doctorID = textChangeD.getText();
           	      dbm.changeCurrentDoctor(doctorID, loggedUser);
-          	      //JOptionPane.showMessageDialog(frameChangeD, "Doctor has Been Changed to Doctor ID: " + doctorID + " confirmation message will be received shortly.");
           	      String doctorLastName = dbm.getDoctorLastName(doctorID);
           	      dbm.addMessage(2, loggedUser, doctorLastName);
-          	     
-          	      frameChangeD.setVisible(false); //(NEW CHANGE)
-          	      ViewMessages(); //(NEW CHANGE)
+          	      //Take user back to view messages frame
+          	      frameChangeD.setVisible(false);
+          	      ViewMessages();
               }
          });
-          frameChangeD.setVisible(true);
-          log.info(loggedUser + "has accessed Change Doctor at" + format);
-       	  String msg = "Change Doctor";
-          dbm.accessLogs(loggedUser, msg);
-      	
+         //Log users access
+         frameChangeD.setVisible(true);
+         log.info(loggedUser + "has accessed Change Doctor at" + format);
+       	 String msg = "Change Doctor";
+         dbm.accessLogs(loggedUser, msg);
       }
       
-      private void viewVisitPres() {
-      	frameVP = new JFrame("Patient Interface: View Visit Details and Prescriptions");
-      	frameVP.setLayout(new GridBagLayout());
-      	GridBagConstraints constraintVP = new GridBagConstraints();
+      /**
+      * This method will create a frame to allow the user to view their details and prescriptions
+      */
+      private void viewVisitPres() 
+      {
+      	  frameVP = new JFrame("Patient Interface: View Visit Details and Prescriptions");
+      	  frameVP.setLayout(new GridBagLayout());
+      	  GridBagConstraints constraintVP = new GridBagConstraints();
           constraintVP.gridx = 0;
           constraintVP.gridy = 0;
 
           frameVP.setSize(600, 600);
           labelVP = new JLabel("Previous bookings: ");
-          frameVP.add(labelVP, constraintVP);
           constraintVP.gridx = 0;
           constraintVP.gridy = 2;
+          frameVP.add(labelVP, constraintVP);
           
-
-          //table
+          //Create table of the users details and prescriptions
           String columns[] = {"DoctorID", "BookingID", "Visit Details", "Prescriptions"};
           tableVP = new JTable(dbm.getVisitDetails(loggedUser), columns);
           tableVP.setBounds(30,40,200,300);  
           JScrollPane scVP = new JScrollPane(tableVP);
           frameVP.add(scVP, constraintVP);
-          
           frameVP.setVisible(true);
-          
       }
-      
-      
-      
 }
