@@ -7,5 +7,8 @@ CREATE TABLE VPDetails (
     BookingID INTEGER,
     visitDetails VARCHAR (255),
     Prescriptions VARCHAR (100),
-    PRIMARY KEY (PatientID, DoctorID, BookingID)
+    PRIMARY KEY (PatientID, DoctorID, BookingID),
+    FOREIGN KEY (PatientID) REFERENCES Patient (patientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors (doctorID),
+    FOREIGN KEY (BookingID) REFERENCES Bookings (BookingID)
 );
