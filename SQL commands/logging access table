@@ -5,5 +5,6 @@ CREATE TABLE logAccess (
     PatientID INTEGER,
     dateAccessed DATE,
     Functionality VARCHAR (100),
+    PRIMARY KEY (PatientID, dateAccessed, Functionality),
     FOREIGN KEY (PatientID) REFERENCES Patient (patientID)
 );
