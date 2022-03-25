@@ -3,9 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-import javax.swing.text.*;
-import java.text.SimpleDateFormat;
-import java.util.logging.Level;
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -108,7 +106,7 @@ public class PatientInterface
     
     //Used to log ongoing feature access and output to terminal
     private final static Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    private SimpleDateFormat format = new SimpleDateFormat("MM/dd/YY hh:mm a");
+    Date date = new Date();
     
     //Link to DBManager
     public DBManager dbm = new DBManager();	
@@ -154,7 +152,7 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
-                //If the user choses to login they will be sent to the login
+                //If the user chooses to login they will be sent to the login
                 //frame
             	frameLogReg.setVisible(false);
                 setupInterface();
@@ -190,7 +188,7 @@ public class PatientInterface
     * patient which will also update the DB with their details and also
     * let them into the system
     */
-    //Method to create the register jframe (NEW CHANGE)
+    //Method to create the register jframe
     private void registerInterface()
     {
         frameReg = new JFrame("Patient Interface: Register");
@@ -316,7 +314,7 @@ public class PatientInterface
                 	loggedUser = dbm.getPID(username);
 
                 	//Send messages out
-                	log.info("A New Patient Has Been Registered at " + format);
+                	log.info("A New Patient Has Been Registered at " + date);
                 	String msg = "New Patient Registered";
                 	dbm.accessLogs(loggedUser, msg);
               	
@@ -392,7 +390,7 @@ public class PatientInterface
                 if(dbm.checkLogin(Username, Password))
                 {
                 	loggedUser = dbm.getPID(Username);
-                    log.info(loggedUser + "has Logged into the system at" + format);
+                    log.info(loggedUser + " has Logged into the system at " + date);
                     String msg = "Logged in";
                   	dbm.accessLogs(loggedUser, msg);
                     frameMain.setVisible(false);
@@ -516,7 +514,7 @@ public class PatientInterface
         
         //Create message for user logging
         frameViewM.setVisible(true);
-        log.info(loggedUser + "has accessed View Messages at" + format);
+        log.info(loggedUser + " has accessed View Messages at " + date);
         String msg = "View Messages";
       	dbm.accessLogs(loggedUser, msg);
     } 
@@ -548,7 +546,7 @@ public class PatientInterface
         
         //Create message to log the users action
         frameShowB.setVisible(true);
-        log.info(dbm.getPID(loggedUser) + "has accessed View Bookings at" + format);
+        log.info(dbm.getPID(loggedUser) + " has accessed View Bookings at " + date);
         String msg = "View Bookings";
       	dbm.accessLogs(loggedUser, msg);
     }
@@ -663,7 +661,7 @@ public class PatientInterface
         });
         //Create message to log users activity
         frameArrangeB.setVisible(true);
-        log.info(loggedUser + "has accessed Arrange Booking at" + format);
+        log.info(loggedUser + " has accessed Arrange Booking at " + date);
         String msg = "Arrange Booking";
       	dbm.accessLogs(loggedUser, msg); 	
     }
@@ -734,7 +732,7 @@ public class PatientInterface
               }
           });
         //Create message to log users activity
-        log.info(loggedUser + "has accessed Reschedule Booking at" + format);
+        log.info(loggedUser + " has accessed Reschedule Booking at " + date);
         String msg = "Reschedule Booking";
       	dbm.accessLogs(loggedUser, msg);     
       }
@@ -829,7 +827,7 @@ public class PatientInterface
           });
           //Log users access
           frameAmendB.setVisible(true);
-          log.info(loggedUser + "has accessed Amend Booking at" + format);
+          log.info(loggedUser + " has accessed Amend Booking at " + date);
           String msg = "Amend Booking";
           dbm.accessLogs(loggedUser, msg);     
       }
@@ -894,9 +892,10 @@ public class PatientInterface
         		  }
               }
          });
+          
          //Log users access
          frameChangeD.setVisible(true);
-         log.info(loggedUser + "has accessed Change Doctor at" + format);
+         log.info(loggedUser + " has accessed Change Doctor at " + date);
        	 String msg = "Change Doctor";
          dbm.accessLogs(loggedUser, msg);
       }
@@ -925,5 +924,10 @@ public class PatientInterface
           JScrollPane scVP = new JScrollPane(tableVP);
           frameVP.add(scVP, constraintVP);
           frameVP.setVisible(true);
+          
+          //Log users access
+          log.info(loggedUser + " has accessed View Visit Details and Prescriptions at " + date);
+          String msg = "View Visit Details and Prescriptions";
+          dbm.accessLogs(loggedUser, msg);
       }
 }
