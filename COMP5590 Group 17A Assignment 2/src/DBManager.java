@@ -2,6 +2,7 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
@@ -202,7 +203,7 @@ import java.util.Random;
 			int month = Integer.parseInt(input[2]);
 			int year = Integer.parseInt(input[3]);
             //Generate random patient ID and get the doctor ID from the DB
-			int bookingID = generateRandomIDNumber();
+			int bookingID = generateRandomIDNumber(1);
 			int doctorID = Integer.parseInt(getDoctorID(pid));
 			try 
 			{
@@ -235,7 +236,7 @@ import java.util.Random;
 	    * A method that generates a random ID number and checks it against a given database table, 
 		* if the number is unique then it is returned, else the method loops
 	    */ 
-		public int generateRandomIDNumber() 
+		public int generateRandomIDNumber(int code) 
 		{
 			int id = 0;
 			//Create random
@@ -247,15 +248,47 @@ import java.util.Random;
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
 				statement = connection.createStatement();
-				resultSet = statement.executeQuery("select * from Bookings where BookingID = " + "'" + id + "'" + "");
-				if (resultSet.next()) 
-				{
-					generateRandomIDNumber(); 
-				} 
-				else 
-				{
-					return id;
+				if (code == 1) {
+					
+					resultSet = statement.executeQuery("select * from Bookings where BookingID = " + "'" + id + "'" + "");
+					
+					if (resultSet.next()) 
+					{
+						generateRandomIDNumber(1); 
+					} 
+					else 
+					{
+						return id;
+					}
+					
+				} else if (code == 2) {
+					
+					resultSet = statement.executeQuery("select * from Messages where messageID = " + "'" + id + "'" + "");
+					
+					if (resultSet.next()) 
+					{
+						generateRandomIDNumber(2); 
+					} 
+					else 
+					{
+						return id;
+					}
+					
+				} else {
+					
+					resultSet = statement.executeQuery("select * from Patient where patientID = " + "'" + id + "'" + "");
+					
+					if (resultSet.next()) 
+					{
+						generateRandomIDNumber(3); 
+					} 
+					else 
+					{
+						return id;
+					}
+					
 				}
+				
 			} 
 			catch (Exception e) 
 			{
@@ -315,7 +348,7 @@ import java.util.Random;
 			
 			case 2:
 				
-				msgBody = "Your Primary Doctor is Now " + additionalInput;
+				msgBody = "Your Primary Doctor is Now Doctor " + additionalInput;
 				
 				break;
 				
@@ -332,7 +365,7 @@ import java.util.Random;
 				break;
 			
 			}
-			int messageID = generateRandomIDNumber();	
+			int messageID = generateRandomIDNumber(2);	
 
 			try 
 			{
@@ -399,6 +432,10 @@ import java.util.Random;
 			return appointmentDate;
 		}
 		
+		/**
+		    * A method that takes an input from a String array, as well as a bookingID, and uses them 
+			* to prepare an SQL statement to update an already existing entry into the Bookings table before executing it
+		    */
 		public void submittedBooking(String[]input, String bID) 
 		{
 			//Get data passed in to be used in the SQL statement
@@ -457,6 +494,61 @@ import java.util.Random;
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	/**
+	* A auxiliary method that searches through given input data for a booking and determines if 
+	* it is valid by attempting to parse each item
+	*/
+	public Boolean isValidBookingData(String[] input) {
+		
+		for (String s: input) {
+			try {
+				int i = Integer.parseInt(s);
+			} catch (NumberFormatException E) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	* A method that checks if there are any conflicting bookings with the given input data, matching against the doctor ID
+	* and returning false if so
+	*/
+	public Boolean isDoctorAvailable(String[] input, String pID) {
+		
+		String doctorID = getDoctorID(pID);
+		String day = input[0];
+		String month = input[1];
+		String year = input[2];
+		
+		try 
+		{
+			//Establish connection to DB
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+			statement = connection.createStatement();
+			//Create an SQL statement from passed in IDs
+			resultSet = statement.executeQuery("select BookingID from Bookings where DoctorID = " + "'" + doctorID + "'" + " AND Day = " + "'" + day + "'" + " AND Month = " + "'" + month + "'" + " AND Year = " + "'" + year + "'" + "");
+			
+			try {
+				if (resultSet.next() || resultSet.getString("BookingID") != null) {
+					return false;
+				} 
+			} catch (SQLException se) {
+				return true;
+			}
+			
+			return false;
+			
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 	
 	/**
@@ -533,9 +625,44 @@ import java.util.Random;
 	}
 	
 	/**
+	* A method that checks if the given id matches an entry in the database
+	*/
+	public boolean isValidDoctorID (String dID) {
+		try 
+		{
+			//Checks that the input contains only numbers, by parsing it prior to attempting SQL statement
+			try {
+				Integer doctorID = Integer.parseInt(dID);
+			} catch (NumberFormatException E) {
+				return false;
+			}
+			
+			//Establish connection to DB
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+			statement = connection.createStatement();
+			//Create an SQL statement from passed in IDs
+			resultSet = statement.executeQuery("select doctorID from Doctors where doctorID = " + "'" + dID + "'");
+			if (resultSet.next()) 
+			{
+				return true;
+			} 
+			else 
+			{
+				return false;
+			}
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
 	* A method that registers a new patient into the database with all their given info
 	*/
-	public void registerPatient(String Email, String Username, String Password, String FirstName, String LastName, String Sex, String PhoneNo, String Address) 
+	public Boolean registerPatient(String Email, String Username, String Password, String FirstName, String LastName, String Sex, String PhoneNo, String Address) 
 	{
 		//Store all information passed into method to variables
 		String email = Email;
@@ -546,38 +673,51 @@ import java.util.Random;
 		String sex = Sex;
 		String phoneNo = PhoneNo;
 		String address = Address;
-		int patientID = generateRandomIDNumber();
+		int patientID = generateRandomIDNumber(3);
 		int doctorID = 1;
 		
-		try 
-		{
-			//Establish connection to DB
-		    Class.forName("com.mysql.cj.jdbc.Driver");
-		    connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
-		    statement = connection.createStatement();
-		    //Create a query to add the new patient into the DB
-		    String query = " insert into Patient (email, username, password, patientID, firstName, lastName, sex, phoneNo, address, doctorID)"
-		            + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-              //Add to the query the passed details of the patient
-		      PreparedStatement preparedStmt = connection.prepareStatement(query);
-		      preparedStmt.setString (1, email);
-		      preparedStmt.setString (2, username);
-		      preparedStmt.setString (3, password);
-		      preparedStmt.setInt    (4, patientID);
-		      preparedStmt.setString (5, firstName);
-		      preparedStmt.setString (6, lastName);
-		      preparedStmt.setString (7, sex);
-		      preparedStmt.setString (8, phoneNo);
-		      preparedStmt.setString (9, address);
-		      preparedStmt.setInt    (10, doctorID);
+		if (sex.equals("m") || sex.equals("M") || sex.equals("w") || sex.equals("W")) {
+			try 
+			{
+				//If the supplied username already exists in the database, throws error and doesn't attempt insert
+				if (getPID(username) != null) {
+					return false;
+				} else {
+					//Establish connection to DB
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+					statement = connection.createStatement();
+					//Create a query to add the new patient into the DB
+			    	String query = " insert into Patient (email, username, password, patientID, firstName, lastName, sex, phoneNo, address, doctorID)"
+			            + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			    	//Add to the query the passed details of the patient
+			    	PreparedStatement preparedStmt = connection.prepareStatement(query);
+			    	preparedStmt.setString (1, email);
+			    	preparedStmt.setString (2, username);
+			    	preparedStmt.setString (3, password);
+			    	preparedStmt.setInt    (4, patientID);
+			    	preparedStmt.setString (5, firstName);
+			    	preparedStmt.setString (6, lastName);
+			    	preparedStmt.setString (7, sex);
+			    	preparedStmt.setString (8, phoneNo);
+			    	preparedStmt.setString (9, address);
+			    	preparedStmt.setInt    (10, doctorID);
 
-		      preparedStmt.execute();
-		      
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
+			    	preparedStmt.execute();
+			    	
+			    	return true;
+			    	
+				}
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+				return false;
+			}
+		} else {
+			return false;
 		}
+		
 	}
 	
 	/**

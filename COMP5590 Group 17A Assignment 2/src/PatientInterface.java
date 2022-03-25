@@ -8,12 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//DB imports
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
 /**
 * Main class to handle all of the UI aspect of the project will methods to create
 * each aspect of the interface with a main method to initialise the starting UI for the user
@@ -110,7 +104,7 @@ public class PatientInterface
     private JFrame frameVP;
     private JLabel labelVP;
     private JTable tableVP;
-    private JButton buttonVDP;
+    private JButton buttonViewDP;
     
     //Used to log ongoing feature access and output to terminal
     private final static Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -314,21 +308,26 @@ public class PatientInterface
                 String address = textReg8.getText();
             	
                 //Use the DB manager method to register a patient with the above details into the DB
-            	dbm.registerPatient(email, username, password, firstName, lastName, sex, phoneNo, address);
-            	frameReg.setVisible(false);
+                if (dbm.registerPatient(email, username, password, firstName, lastName, sex, phoneNo, address)) {
+                	
+                	frameReg.setVisible(false);
             	
-                //Set the new user as the currently logged in user
-            	loggedUser = dbm.getPID(username);
+                	//Set the new user as the currently logged in user
+                	loggedUser = dbm.getPID(username);
 
-                //Send messages out
-            	log.info("A New Patient Has Been Registered at " + format);
-                String msg = "New Patient Registered";
-              	dbm.accessLogs(loggedUser, msg);
+                	//Send messages out
+                	log.info("A New Patient Has Been Registered at " + format);
+                	String msg = "New Patient Registered";
+                	dbm.accessLogs(loggedUser, msg);
               	
-        	    dbm.addMessage(1, loggedUser, null);
+                	dbm.addMessage(1, loggedUser, null);
             	
-                //Allow the user to change their doctor
-            	changeDoctor();        
+                	//Allow the user to change their doctor
+                	changeDoctor();     
+            	
+                } else {
+                	JOptionPane.showMessageDialog(frameReg, "There was an error processing your details. Either the information was not valid or your username may already be taken.");
+                }
             }
         });
         frameReg.setVisible(true);
@@ -345,35 +344,40 @@ public class PatientInterface
         frameMain.setSize(400, 200);
         frameMain.setLayout(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
-        constraint.gridx = 0;
-        constraint.gridy = 0;
 
         labelMain = new JLabel("Login");
         constraint.gridx = 0;
-        constraint.gridy = 1;
+        constraint.gridy = 0;
         frameMain.add(labelMain, constraint);
 
         //Username text field
         labelMain = new JLabel("Username: ");
-        frameMain.add(labelMain, constraint);
-        constraint.gridx = 1;
-        usernameField = new JTextField(12);
         constraint.gridx = 0;
-        constraint.gridy = 2;
+        constraint.gridy = 1;
+        frameMain.add(labelMain, constraint);
+        
+        usernameField = new JTextField(12);
+        constraint.gridx = 1;
+        constraint.gridy = 1;
         frameMain.add(usernameField, constraint);
 
         //Password password field (in order to hide password when its entered)
         labelMain = new JLabel("Password: ");
+        constraint.gridx = 0;
+        constraint.gridy = 2;
         frameMain.add(labelMain, constraint);
-        constraint.gridx = 1;
+        
         passwordField = new JPasswordField(12);
         constraint.gridx = 1;
-        constraint.gridy = 3;
+        constraint.gridy = 2;
         frameMain.add(passwordField, constraint);
 
         //Button to submit the login details
         buttonMain = new JButton("Enter");
+        constraint.gridx = 1;
+        constraint.gridy = 3;
         frameMain.add(buttonMain, constraint);
+        
         //Action listener to check for the users click
         buttonMain.addActionListener(new ActionListener()
         {
@@ -392,7 +396,7 @@ public class PatientInterface
                     String msg = "Logged in";
                   	dbm.accessLogs(loggedUser, msg);
                     frameMain.setVisible(false);
-                    ViewMessages();
+                    viewMessages();
                 }
                 else
                 {
@@ -409,13 +413,13 @@ public class PatientInterface
     /**
     * This method will create a frame to show the user their current messages when called
     */
-    private void ViewMessages()
+    private void viewMessages()
     {
         frameViewM = new JFrame("Patient Interface: View Messages");
         frameViewM.setLayout(new GridBagLayout());
+        GridBagConstraints constraint2 = new GridBagConstraints();
         constraint2.gridx = 0;
         constraint2.gridy = 0;
-        GridBagConstraints constraint2 = new GridBagConstraints();
         
         //Create button to allow user to make a new booking
         buttonViewM2 = new JButton("Make New Bookings");
@@ -432,7 +436,7 @@ public class PatientInterface
         });
         
         //Create button to allow user to open the View Bookings Window
-        constraint2.gridx = 1;
+        constraint2.gridx = 2;
         buttonViewM1 = new JButton("View Bookings");
         buttonViewM1.setBounds(50,100,95,30);  
         frameViewM.add(buttonViewM1, constraint2);
@@ -463,7 +467,7 @@ public class PatientInterface
         });
         //Create button to allow user to change doctor
         constraint2.gridy = 1;
-        constraint2.gridx = 1;
+        constraint2.gridx = 2;
         buttonChangeD1 = new JButton("Change Doctor");
         buttonChangeD1.setBounds(50,100,95,30);  
         frameViewM.add(buttonChangeD1, constraint2);
@@ -477,14 +481,31 @@ public class PatientInterface
             	changeDoctor();
             }
         });
-        //Show the users messages
-        constraint2.gridx = 0;
+        
+      //Create button to allow user to view past visit details and prescriptions
+        constraint2.gridy = 0;
+        constraint2.gridx = 1;
+        buttonViewDP = new JButton("View Past Visit Details");
+        buttonViewDP.setBounds(50,100,95,30);  
+        frameViewM.add(buttonViewDP, constraint2);
+        buttonViewDP.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+                //Call arrange new booking interface
+            	viewVisitPres();
+            }
+        });
+        
+        constraint2.gridx = 1;
         constraint2.gridy = 2;
-        frameViewM.setSize(600, 600);
+        frameViewM.setSize(750, 600);
         labelViewM = new JLabel("View Messages");
         frameViewM.add(labelViewM, constraint2);
-        constraint2.gridx = 0;
+        constraint2.gridx = 1;
         constraint2.gridy = 3;
+        
         //Create table to display the users current messages
         String columns[] = {"ID", "Message"};
         tableViewM = new JTable(dbm.getMessages(loggedUser), columns);
@@ -492,6 +513,7 @@ public class PatientInterface
         tableViewM.getColumnModel().getColumn(0).setPreferredWidth(1);
         JScrollPane sc = new JScrollPane(tableViewM);
         frameViewM.add(sc, constraint2);
+        
         //Create message for user logging
         frameViewM.setVisible(true);
         log.info(loggedUser + "has accessed View Messages at" + format);
@@ -508,20 +530,20 @@ public class PatientInterface
     	frameShowB = new JFrame("Patient Interface: View Bookings");
         frameShowB.setLayout(new GridBagLayout());
         GridBagConstraints constraint3 = new GridBagConstraints();
-        constraint3.gridx = 0;
-        constraint3.gridy = 0;
 
         frameShowB.setSize(600, 600);
         labelShowB = new JLabel("All Current Bookings");
         constraint3.gridx = 0;
-        constraint3.gridy = 2;
+        constraint3.gridy = 0;
         frameShowB.add(labelShowB, constraint3);
 
         //Create table to show the user their bookings from the DB
         String columns[] = {"Id","Room", "Day","Month", "Year"};
-        tableViewM = new JTable(dbm.getBookings(loggedUser), columns);
-        tableViewM.setBounds(30,40,200,300);  
-        JScrollPane sc = new JScrollPane(tableViewM);
+        tableShowB = new JTable(dbm.getBookings(loggedUser), columns);
+        tableShowB.setBounds(30,40,200,300);  
+        constraint3.gridx = 0;
+        constraint3.gridy = 1;
+        JScrollPane sc = new JScrollPane(tableShowB);
         frameShowB.add(sc, constraint3);
         
         //Create message to log the users action
@@ -541,15 +563,15 @@ public class PatientInterface
         frameArrangeB.setSize(400, 200);
         frameArrangeB.setLayout(new GridBagLayout());
         GridBagConstraints constraint4 = new GridBagConstraints();
-        constraint4.gridx = 0;
-        constraint4.gridy = 0;
 
         //Title
         labelArrangeB = new JLabel("Booking Appointment");
-        frameArrangeB.add(labelArrangeB, constraint4);
-        constraint4.gridx = 1;
+        constraint4.gridx = 0;
+        constraint4.gridy = 0;
+        frameArrangeB.add(labelArrangeB, constraint4); 
         
         //Text fields
+        constraint4.gridx = 1;
         constraint4.gridy = 1;
         locationField = new JTextField(12);
         locationField.setSize(100,20);
@@ -607,19 +629,36 @@ public class PatientInterface
             	input[2] = monthField.getText();
             	input[3] = yearField.getText();
             	
-            	dbm.arrangeBooking(input, loggedUser);
+            	if (dbm.isValidBookingData(input)) {    		
+            		String[] dateInput = new String[3];
+                	dateInput[0] = dayField.getText();
+                	dateInput[1] = monthField.getText();
+                	dateInput[2] = yearField.getText();
+                	
+            		if (dbm.isDoctorAvailable(dateInput, loggedUser)) {
+            			dbm.arrangeBooking(input, loggedUser);
+                	
+                		String bookingDate = dbm.constructAppointmentDate(dateInput);
+                		dbm.addMessage(3, loggedUser, bookingDate);
+                	
+                		frameViewM.setVisible(false);
+                		frameArrangeB.setVisible(false);
+                    	//Show the users bookings
+                		viewBookings();
+                		viewMessages();
+                		
+            		} else {
+            			JOptionPane.showMessageDialog(frameChangeD, "Your Doctor is not available at your chosen date, please choose another");
+            		}
+                	
+            	} else {
+            		JOptionPane.showMessageDialog(frameChangeD, "The input date and room number given is not valid");
+                    locationField.setText("");
+                    dayField.setText("");
+                    monthField.setText("");
+                    yearField.setText("");
+            	}
             	
-            	String[] dateInput = new String[3];
-            	dateInput[0] = dayField.getText();
-            	dateInput[1] = monthField.getText();
-            	dateInput[2] = yearField.getText();
-            	
-            	String bookingDate = dbm.constructAppointmentDate(dateInput);
-        	    dbm.addMessage(3, loggedUser, bookingDate);
-            	
-            	frameArrangeB.setVisible(false);
-                //Show the users bookings
-            	viewBookings();
             }
         });
         //Create message to log users activity
@@ -637,13 +676,11 @@ public class PatientInterface
     	frameResB = new JFrame("Patient Interface: Reschedule Bookings");
         frameResB.setLayout(new GridBagLayout());
         GridBagConstraints constraintRB = new GridBagConstraints();
-        constraintRB.gridx = 0;
-        constraintRB.gridy = 0;
 
         frameResB.setSize(600, 600);
         labelResB = new JLabel("Previous bookings: ");
         constraintRB.gridx = 0;
-        constraintRB.gridy = 2;
+        constraintRB.gridy = 0;
         frameResB.add(labelResB, constraintRB);
           
         //Table
@@ -651,6 +688,8 @@ public class PatientInterface
         tableResB = new JTable(dbm.getBookings(loggedUser), columns);
         tableResB.setBounds(30,40,200,300);  
         JScrollPane scRB = new JScrollPane(tableResB);
+        constraintRB.gridx = 0;
+        constraintRB.gridy = 1;
         frameResB.add(scRB, constraintRB);
           
         frameResB.setVisible(true);
@@ -682,6 +721,8 @@ public class PatientInterface
                 //Validate the booking information
                 if (dbm.isValidBookingID(loggedUser,input)) 
                 {
+                	frameViewM.setVisible(false);
+                	frameResB.setVisible(false);
                 	amendBooking(input);
                 }
                 else 
@@ -706,18 +747,18 @@ public class PatientInterface
     	  frameAmendB = new JFrame("Patient Interface: Amend Booking");
           frameAmendB.setLayout(new GridBagLayout());
           GridBagConstraints constraintRB1 = new GridBagConstraints();
-          constraintRB1.gridx = 0;
-          constraintRB1.gridy = 1;
 
           //Setup user inputs
           frameAmendB.setSize(600, 600);
           labelAmendB1 = new JLabel("Day: ");
-          constraintRB1.gridx = 1;
+          constraintRB1.gridx = 0;
           constraintRB1.gridy = 1;
           frameAmendB.add(labelAmendB1, constraintRB1);
           
           textAmendB1 = new JTextField(12);
           textAmendB1.setSize(100,20);
+          constraintRB1.gridx = 1;
+          constraintRB1.gridy = 1;
           frameAmendB.add(textAmendB1, constraintRB1);
           
           constraintRB1.gridx = 0;
@@ -762,12 +803,28 @@ public class PatientInterface
                   input[1] = textAmendB2.getText();
                   input[2] = textAmendB3.getText();
                     
-                  dbm.submittedBooking(input, bookingID);
-                 
-                  String bookingDate = dbm.constructAppointmentDate(input);
-         	      dbm.addMessage(4, loggedUser, bookingDate);
-         	      
-                  viewBookings();  
+                  if (dbm.isValidBookingData(input)) {
+                      if (dbm.isDoctorAvailable(input, loggedUser)) {
+                    	  
+                    	  dbm.submittedBooking(input, bookingID);
+                    	  
+                    	  String bookingDate = dbm.constructAppointmentDate(input);
+                 	      dbm.addMessage(4, loggedUser, bookingDate);
+                 	      
+                 	      frameAmendB.setVisible(false);
+                          viewBookings();  
+                          viewMessages();
+                  		
+              		} else {
+              			JOptionPane.showMessageDialog(frameChangeD, "Your Doctor is not available at your chosen date, please choose another");
+              		} 
+                  }
+                  else {
+                	  JOptionPane.showMessageDialog(frameChangeD, "The input date given is not valid");
+                      textAmendB1.setText("");
+                      textAmendB2.setText("");
+                      textAmendB3.setText("");
+                  }
               }
           });
           //Log users access
@@ -786,19 +843,19 @@ public class PatientInterface
     	  frameChangeD = new JFrame("Patient Interface: Change Doctor");
       	  frameChangeD.setLayout(new GridBagLayout());
       	  GridBagConstraints constraint4 = new GridBagConstraints();
-      	  constraint4.gridx = 0;
-      	  constraint4.gridy = 0;
       	
           //Table to display current doctors and their IDs
       	  frameChangeD.setSize(600, 600);
       	  labelChangeD = new JLabel("Available Doctors List");
           constraint4.gridx = 0;
-      	  constraint4.gridy = 3;
+      	  constraint4.gridy = 0;
       	  frameChangeD.add(labelChangeD, constraint4);
       	
       	  String columns[] = {"doctorID", "Last Name", "Speciality"};
       	  tableChangeD = new JTable(dbm.getDoctors(loggedUser), columns);
       	  tableChangeD.setBounds(30,40,200,300);
+      	  constraint4.gridx = 0;
+    	  constraint4.gridy = 1;
       	  JScrollPane sc = new JScrollPane(tableChangeD);
       	  frameChangeD.add(sc, constraint4);
       	
@@ -806,12 +863,14 @@ public class PatientInterface
       	  constraint4.gridy = 5;
       	  buttonChangeD2 = new JButton("Change Doctor");
           buttonChangeD2.setBounds(50,100,95,30);  
+          constraint4.gridx = 0;
+      	  constraint4.gridy = 4;
           frameChangeD.add(buttonChangeD2, constraint4);
           
           textChangeD = new JTextField(5);
           textChangeD.setSize(100,20);
           constraint4.gridx = 0;
-          constraint4.gridy = 4;
+          constraint4.gridy = 3;
           frameChangeD.add(textChangeD, constraint4);
           buttonChangeD2.addActionListener(new ActionListener()
           {
@@ -820,12 +879,19 @@ public class PatientInterface
         	  {
                   //Change doctor using the DB manager method
         		  String doctorID = textChangeD.getText();
-          	      dbm.changeCurrentDoctor(doctorID, loggedUser);
-          	      String doctorLastName = dbm.getDoctorLastName(doctorID);
-          	      dbm.addMessage(2, loggedUser, doctorLastName);
-          	      //Take user back to view messages frame
-          	      frameChangeD.setVisible(false);
-          	      ViewMessages();
+        		  if (dbm.isValidDoctorID(doctorID)) {
+        			  
+        			  dbm.changeCurrentDoctor(doctorID, loggedUser);
+        			  String doctorLastName = dbm.getDoctorLastName(doctorID);
+        			  dbm.addMessage(2, loggedUser, doctorLastName);
+        			  //Take user back to view messages frame
+        			  frameChangeD.setVisible(false);
+        			  viewMessages();
+        			  
+        		  } else {
+        			  JOptionPane.showMessageDialog(frameChangeD, "Not a Valid Doctor ID");
+                      textChangeD.setText("");
+        		  }
               }
          });
          //Log users access
@@ -843,19 +909,19 @@ public class PatientInterface
       	  frameVP = new JFrame("Patient Interface: View Visit Details and Prescriptions");
       	  frameVP.setLayout(new GridBagLayout());
       	  GridBagConstraints constraintVP = new GridBagConstraints();
-          constraintVP.gridx = 0;
-          constraintVP.gridy = 0;
 
           frameVP.setSize(600, 600);
-          labelVP = new JLabel("Previous bookings: ");
+          labelVP = new JLabel("Visit Details");
           constraintVP.gridx = 0;
-          constraintVP.gridy = 2;
+          constraintVP.gridy = 0;
           frameVP.add(labelVP, constraintVP);
           
           //Create table of the users details and prescriptions
           String columns[] = {"DoctorID", "BookingID", "Visit Details", "Prescriptions"};
           tableVP = new JTable(dbm.getVisitDetails(loggedUser), columns);
           tableVP.setBounds(30,40,200,300);  
+          constraintVP.gridx = 0;
+          constraintVP.gridy = 1;
           JScrollPane scVP = new JScrollPane(tableVP);
           frameVP.add(scVP, constraintVP);
           frameVP.setVisible(true);
