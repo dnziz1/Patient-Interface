@@ -26,6 +26,14 @@ public class PatientInterface
     private JButton buttonViewM1;
     private JButton buttonViewM2;
     
+    //Variables for the sub third frame which will allow parameter input to select bookings
+    private JFrame frameVBP;
+    private JLabel labelVBP;
+    private JLabel labelVBP2;
+    private JTextField monthFieldVBP;
+    private JTextField yearFieldVBP;
+    private JButton buttonVBP;
+    
     //Variables for the third frame which will show bookings
     private JFrame frameShowB;
     private JLabel labelShowB;
@@ -444,8 +452,8 @@ public class PatientInterface
             @Override
             public void actionPerformed(ActionEvent event)
             {
-                //Call view bookings interface
-            	viewBookings();
+                //Call the view bookings parameters interface
+            	viewBookingsParameters();
             }
         });
         //Create button to allow user to ammend bookings
@@ -520,24 +528,100 @@ public class PatientInterface
     } 
     
     /**
+     * This method will create a frame that will allow the user to enter parameters for 
+     * searching their current bookings, within a span of a given month and year
+     */
+     private void viewBookingsParameters()
+     {
+         frameVBP = new JFrame("Patient Interface: View Bookings Parameters");
+         frameVBP.setSize(400, 200);
+         frameVBP.setLayout(new GridBagLayout());
+         GridBagConstraints constraintVBP = new GridBagConstraints();
+
+         labelVBP = new JLabel("Input Booking Parameters");
+         constraintVBP.gridx = 0;
+         constraintVBP.gridy = 0;
+         frameVBP.add(labelVBP, constraintVBP);
+
+         //Month text field
+         labelVBP = new JLabel("Month: ");
+         constraintVBP.gridx = 0;
+         constraintVBP.gridy = 1;
+         frameVBP.add(labelVBP, constraintVBP);
+         
+         monthFieldVBP = new JTextField(12);
+         constraintVBP.gridx = 1;
+         constraintVBP.gridy = 1;
+         frameVBP.add(monthFieldVBP, constraintVBP);
+
+         //Year text field
+         labelVBP2 = new JLabel("Year: ");
+         constraintVBP.gridx = 0;
+         constraintVBP.gridy = 2;
+         frameVBP.add(labelVBP2, constraintVBP);
+         
+         yearFieldVBP = new JTextField(12);
+         constraintVBP.gridx = 1;
+         constraintVBP.gridy = 2;
+         frameVBP.add(yearFieldVBP, constraintVBP);
+
+         //Button to submit the login details
+         buttonVBP = new JButton("Enter");
+         constraintVBP.gridx = 1;
+         constraintVBP.gridy = 3;
+         frameVBP.add(buttonVBP, constraintVBP);
+         
+         //Action listener to check for the users click
+         buttonVBP.addActionListener(new ActionListener()
+         {
+        	 public void actionPerformed(ActionEvent event)
+             {
+        		 String selectedMonth = monthFieldVBP.getText();
+        		 String selectedYear = yearFieldVBP.getText();
+        		 
+        		 Integer monthCheck = 0;
+    			 Integer yearCheck = 0;
+        		 
+        		 try {
+        			 monthCheck = Integer.parseInt(selectedMonth);
+        			 yearCheck = Integer.parseInt(selectedYear);
+        		 } catch (Exception E) {
+         			JOptionPane.showMessageDialog(frameVBP, "Input was invalid, please only enter numbers");
+        		 }
+        		 
+        		 if(monthCheck <= 12 && monthCheck >= 0 && yearCheck <= 2099 && yearCheck >= 2022) {
+        			 frameVBP.setVisible(false);
+        			 viewBookings(selectedMonth, selectedYear);
+        		 } else {
+        			 JOptionPane.showMessageDialog(frameVBP, "Input was invalid, please enter values that are within a correct range");
+        		 }
+             }
+             
+         });
+         
+         frameVBP.setVisible(true);	
+     }
+    
+    /**
     * This method will create a frame to show the user their bookings by populating
-    * the frame with all current bookings for the currently logged in patient
+    * the frame with all current bookings for the currently logged in patient that 
+    * fall within the given month and year parameters
     */
-    private void viewBookings() 
+    private void viewBookings(String month, String year) 
     {
     	frameShowB = new JFrame("Patient Interface: View Bookings");
         frameShowB.setLayout(new GridBagLayout());
         GridBagConstraints constraint3 = new GridBagConstraints();
 
         frameShowB.setSize(600, 600);
-        labelShowB = new JLabel("All Current Bookings");
+        labelShowB = new JLabel("All Matching Bookings");
         constraint3.gridx = 0;
         constraint3.gridy = 0;
         frameShowB.add(labelShowB, constraint3);
 
         //Create table to show the user their bookings from the DB
         String columns[] = {"Id","Room", "Day","Month", "Year"};
-        tableShowB = new JTable(dbm.getBookings(loggedUser), columns);
+        tableShowB = new JTable(dbm.getBookings(loggedUser, month, year), columns);
         tableShowB.setBounds(30,40,200,300);  
         constraint3.gridx = 0;
         constraint3.gridy = 1;
@@ -613,6 +697,7 @@ public class PatientInterface
         buttonArrangeB = new JButton("Confirm Booking");
         buttonArrangeB.setBounds(50,100,95,30);  
         frameArrangeB.add(buttonArrangeB, constraint4);
+        
         //Action listener to input the data entered by the user into the database
         buttonArrangeB.addActionListener(new ActionListener()
         {
@@ -627,38 +712,57 @@ public class PatientInterface
             	input[2] = monthField.getText();
             	input[3] = yearField.getText();
             	
-            	if (dbm.isValidBookingData(input)) {    		
-            		String[] dateInput = new String[3];
-                	dateInput[0] = dayField.getText();
-                	dateInput[1] = monthField.getText();
-                	dateInput[2] = yearField.getText();
-                	
-            		if (dbm.isDoctorAvailable(dateInput, loggedUser)) {
-            			dbm.arrangeBooking(input, loggedUser);
-                	
-                		String bookingDate = dbm.constructAppointmentDate(dateInput);
-                		dbm.addMessage(3, loggedUser, bookingDate);
-                	
-                		frameViewM.setVisible(false);
-                		frameArrangeB.setVisible(false);
-                    	//Show the users bookings
-                		viewBookings();
-                		viewMessages();
-                		
-            		} else {
-            			JOptionPane.showMessageDialog(frameChangeD, "Your Doctor is not available at your chosen date, please choose another");
-            		}
-                	
-            	} else {
-            		JOptionPane.showMessageDialog(frameChangeD, "The input date and room number given is not valid");
-                    locationField.setText("");
-                    dayField.setText("");
-                    monthField.setText("");
-                    yearField.setText("");
-            	}
+            	Integer dayCheck = 0;
+            	Integer monthCheck = 0;
+            	Integer yearCheck = 0;
             	
+            	try {
+            		dayCheck = Integer.parseInt(dayField.getText());
+                	monthCheck = Integer.parseInt(monthField.getText());
+                	yearCheck = Integer.parseInt(yearField.getText());
+       		 	} catch (Exception E) {
+        			JOptionPane.showMessageDialog(frameVBP, "Input was invalid, please only enter numbers");
+       		 	}
+       		 	
+       		 	if(dayCheck <= 31 && dayCheck >= 0 && monthCheck <= 12 && monthCheck >= 0 && yearCheck <= 2099 && yearCheck >= 2022) {
+       		 		
+       		 		if (dbm.isValidBookingData(input)) {    		
+       		 			String[] dateInput = new String[3];
+       		 			dateInput[0] = dayField.getText();
+       		 			dateInput[1] = monthField.getText();
+       		 			dateInput[2] = yearField.getText();
+                	
+       		 			if (dbm.isDoctorAvailable(dateInput, loggedUser)) {
+       		 				dbm.arrangeBooking(input, loggedUser);
+       		 				
+       		 				String bookingDate = dbm.constructAppointmentDate(dateInput);
+       		 				dbm.addMessage(3, loggedUser, bookingDate);
+       		 				
+       		 				frameViewM.setVisible(false);
+       		 				frameArrangeB.setVisible(false);
+       		 				//Show the users bookings
+       		 				viewBookings(monthField.getText(), yearField.getText());
+       		 				viewMessages();
+                		
+       		 			} else {
+       		 				JOptionPane.showMessageDialog(frameChangeD, "Your Doctor is not available at your chosen date, please choose another");
+       		 			}
+       		 			
+       		 		} else {
+       		 			JOptionPane.showMessageDialog(frameChangeD, "The input date and room number given is not valid");
+       		 			locationField.setText("");
+       		 			dayField.setText("");
+       		 			monthField.setText("");
+       		 			yearField.setText("");
+       		 		}
+       		 			
+       		 	} else {
+       		 		JOptionPane.showMessageDialog(frameVBP, "Input was invalid, please enter values that are within a correct range");
+       			}
+       		 	
             }
         });
+        
         //Create message to log users activity
         frameArrangeB.setVisible(true);
         log.info(loggedUser + " has accessed Arrange Booking at " + date);
@@ -683,7 +787,7 @@ public class PatientInterface
           
         //Table
         String columns[] = {"BookingID", "Room", "Day", "Month", "Year"};
-        tableResB = new JTable(dbm.getBookings(loggedUser), columns);
+        tableResB = new JTable(dbm.getAllBookings(loggedUser), columns);
         tableResB.setBounds(30,40,200,300);  
         JScrollPane scRB = new JScrollPane(tableResB);
         constraintRB.gridx = 0;
@@ -731,6 +835,7 @@ public class PatientInterface
                 }
               }
           });
+        
         //Create message to log users activity
         log.info(loggedUser + " has accessed Reschedule Booking at " + date);
         String msg = "Reschedule Booking";
@@ -800,18 +905,30 @@ public class PatientInterface
                   input[0] = textAmendB1.getText();
                   input[1] = textAmendB2.getText();
                   input[2] = textAmendB3.getText();
-                    
+                  
+                  //Following checks validity of booking data in a couple ways, and if the doctor would be free to attend  
                   if (dbm.isValidBookingData(input)) {
+                	  
                       if (dbm.isDoctorAvailable(input, loggedUser)) {
                     	  
-                    	  dbm.submittedBooking(input, bookingID);
+                    	  Integer dayCheck = Integer.parseInt(input[0]);
+                    	  Integer monthCheck = Integer.parseInt(input[1]);
+                    	  Integer yearCheck = Integer.parseInt(input[2]);
                     	  
-                    	  String bookingDate = dbm.constructAppointmentDate(input);
-                 	      dbm.addMessage(4, loggedUser, bookingDate);
+                    	  if(dayCheck <= 31 && dayCheck >= 0 && monthCheck <= 12 && monthCheck >= 0 && yearCheck <= 2099 && yearCheck >= 2021) {
+                    	  
+                    		  dbm.submittedBooking(input, bookingID);
+                    		  
+                    		  String bookingDate = dbm.constructAppointmentDate(input);
+                    		  dbm.addMessage(4, loggedUser, bookingDate);
                  	      
-                 	      frameAmendB.setVisible(false);
-                          viewBookings();  
-                          viewMessages();
+                    		  frameAmendB.setVisible(false);
+                    		  viewBookings(textAmendB2.getText(), textAmendB3.getText());  
+                    		  viewMessages();
+                    		  
+                    	  } else {
+                    		  JOptionPane.showMessageDialog(frameVBP, "Input was invalid, please enter values that are within a correct range");
+                    	  }
                   		
               		} else {
               			JOptionPane.showMessageDialog(frameChangeD, "Your Doctor is not available at your chosen date, please choose another");
@@ -825,6 +942,7 @@ public class PatientInterface
                   }
               }
           });
+          
           //Log users access
           frameAmendB.setVisible(true);
           log.info(loggedUser + " has accessed Amend Booking at " + date);

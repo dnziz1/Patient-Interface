@@ -146,14 +146,61 @@ import java.util.Random;
 		}
 		
 		/**
-	    * A method that searches the bookings table for all stored bookings by the current user, and returns them as an array
+	    * A method that searches the bookings table for all stored bookings by the current user that fall under the 
+	    * given month and year, and returns them as an array
 	    */
-		public String[][] getBookings(String pid) 
+		public String[][] getBookings(String pid, String month, String year) 
 		{
 			//Create array
 			String[][] resultData = new String[20][20];
 			int i = 0;
 				
+			try 
+			{
+				//Establish connection to DB
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/a217a?user=root&password=root");
+				statement = connection.createStatement();
+				resultSet = statement.executeQuery("select * from Bookings where patientID = " + "'" + pid + "'" + "And month = " +  "'" + month + "'" + "And year = " +  "'" + year + "'" + "");
+				//Iterate through DB
+				while (resultSet.next()) 
+				{
+					//Get details
+					String BookingID = resultSet.getString("BookingID");
+					String Room = resultSet.getString("Room");
+					String Day = resultSet.getString("Day");
+					String Month = resultSet.getString("Month");
+					String Year = resultSet.getString("Year");
+					int j = 0;
+					//Insert into array
+					resultData[i][j] = BookingID;
+					j++;
+					resultData[i][j] = Room;
+					j++;
+					resultData[i][j] = Day;
+					j++;
+					resultData[i][j] = Month;
+					j++;
+					resultData[i][j] = Year;
+					i++;
+				}
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}	
+			return resultData;
+		}
+		
+		/**
+		* A method that searches the bookings table for all stored bookings by the current user, and returns them as an array
+		*/
+		public String[][] getAllBookings(String pid) 
+		{
+			//Create array
+			String[][] resultData = new String[20][20];
+			int i = 0;
+					
 			try 
 			{
 				//Establish connection to DB
@@ -197,7 +244,7 @@ import java.util.Random;
 	    */
 		public void arrangeBooking(String[] input, String pid) 
 		{
-			//Get inputted deatils passed in by the method
+			//Get inputed details passed in by the method
 			String room = input[0];
 			int day = Integer.parseInt(input[1]);
 			int month = Integer.parseInt(input[2]);
